@@ -1,0 +1,12 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="110" fill="#1769D2"/>
+  <rect x="35" y="35" width="442" height="442" rx="90" fill="none" stroke="#FFFFFF" stroke-opacity=".3" stroke-width="5"/>
+  <text x="256" y="300"
+        font-family="Arial,sans-serif"
+        font-size="190"
+        font-weight="bold"
+        fill="#FFFFFF"
+        text-anchor="middle">SF</text>
+  <circle cx="390" cy="125" r="17" fill="#FFFFFF"/>
+</svg>
