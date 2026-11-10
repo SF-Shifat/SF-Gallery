@@ -1,0 +1,12 @@
+
+{
+  "name": "SF-Gallery",
+  "short_name": "SF-Gallery",
+  "description": "Your Digital Experience Starts Here",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1769D2"
+}
