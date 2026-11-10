@@ -4,7 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1769d2">
+<link rel="manifest" href="./manifest.json">
+ <meta name="theme-color" content="#1769d2">
 <title>SF-Gallery</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -138,6 +139,17 @@ footer span{display:block;font-size:21px;margin-bottom:4px}
  <a href="#profile"><span>👤</span>Profile</a>
  <a href="#settings"><span>⚙️</span>Settings</a>
 </footer>
+
+ 
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("SF-Gallery Offline Ready"))
+      .catch(error => console.log(error));
+  });
+}
+</script>
 
 </body>
 </html>
