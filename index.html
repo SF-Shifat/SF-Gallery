@@ -134,7 +134,8 @@ window.submitCustomerAuth=async()=>{
   if(authMode==="register"){
    const name=$("customerName").value.trim(),phone=$("customerPhone").value.trim();
    if(!name||!phone)throw new Error("নাম ও মোবাইল নম্বর দিন।");
-   if(!/^\\+?[0-9]{10,15}$/.test(phone.replace(/[\\s-]/g,"")))throw new Error("সঠিক মোবাইল নম্বর দিন।");
+   const cleanPhone=phone.replaceAll(" ","").replaceAll("-","");
+   if(cleanPhone.length<10||cleanPhone.length>16||!(/^[0-9]/.test(cleanPhone)||cleanPhone.startsWith("+")))throw new Error("সঠিক মোবাইল নম্বর দিন।");
    if(password.length<6)throw new Error("Password কমপক্ষে ৬ অক্ষরের হতে হবে।");
    const cred=await createUserWithEmailAndPassword(auth,email,password);
    await updateProfile(cred.user,{displayName:name});
