@@ -97,7 +97,8 @@ window.openProduct=id=>{
  const p=products[id];if(!p)return;
  const image=p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" style="width:100%;max-height:340px;object-fit:contain;background:#fff;border-radius:14px">':'<div style="height:220px;display:grid;place-items:center;font-size:76px;background:#f4f7fc;border-radius:14px">📱</div>';
  $('productDetailContent').innerHTML='<div style="margin:16px 0">'+image+'</div><h2 style="color:#172b4d;margin-bottom:8px">'+safe(p.brand)+' '+safe(p.name)+'</h2><p class="muted" style="font-size:15px;margin:8px 0">RAM: '+safe(p.ram||"উল্লেখ নেই")+' · Storage: '+safe(p.storage||"উল্লেখ নেই")+'</p><div class="price" style="font-size:24px">'+(p.offer?'<s class="muted" style="font-size:15px">৳'+safe(p.price)+'</s> ৳'+safe(p.offer):'৳'+safe(p.price))+'</div><p class="stock '+(p.stock==="Out of Stock"?"out":"")+'" style="font-size:14px">'+safe(p.stock||"Available")+'</p><h3 style="margin:18px 0 8px">বিস্তারিত বিবরণ</h3><p style="line-height:1.7;white-space:pre-wrap">'+safe(p.description||"এই ফোনের অতিরিক্ত বিবরণ এখনো যোগ করা হয়নি।")+'</p><div class="actions"><button class="secondary" onclick="showPage(\'home\')">← Back to Home</button></div>';
- const orderBtn=document.createElement("button");orderBtn.textContent="Order Now";orderBtn.onclick=()=>window.startOrder(id);$("productDetailContent").append(orderBtn);\n showPage("detail");
+ const orderBtn=document.createElement("button");orderBtn.textContent="Order Now";orderBtn.onclick=()=>window.startOrder(id);$("productDetailContent").append(orderBtn);
+ showPage("detail");
 };
 $("productGrid").addEventListener("click",e=>{const card=e.target.closest("[data-product-id]");if(card)window.openProduct(card.dataset.productId);});
 $("productGrid").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){const card=e.target.closest("[data-product-id]");if(card){e.preventDefault();window.openProduct(card.dataset.productId);}}});
@@ -138,7 +139,8 @@ window.submitCustomerAuth=async()=>{
    if(cleanPhone.length<10||cleanPhone.length>16||!(/^[0-9]/.test(cleanPhone)||cleanPhone.startsWith("+")))throw new Error("সঠিক মোবাইল নম্বর দিন।");
    if(password.length<6)throw new Error("Password কমপক্ষে ৬ অক্ষরের হতে হবে।");
    const cred=await createUserWithEmailAndPassword(auth,email,password);
-   await updateProfile(cred.user,{displayName:name});\n   await set(ref(db,"customers/"+cred.user.uid),{name,phone:cleanPhone,email,createdAt:Date.now()});
+   await updateProfile(cred.user,{displayName:name});
+   await set(ref(db,"customers/"+cred.user.uid),{name,phone:cleanPhone,email,createdAt:Date.now()});
   }else{await signInWithEmailAndPassword(auth,email,password);}
   customerUser=auth.currentUser;$("authMessage").textContent="সফল হয়েছে!";showPage("home");
  }catch(e){$("authMessage").textContent=e.message||"সমস্যা হয়েছে। আবার চেষ্টা করুন।";}
