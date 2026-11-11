@@ -184,7 +184,56 @@ body{padding-bottom:0}
 
 .phone-source-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.phone-source-links a{display:inline-block;background:#fff0e8;color:#d94800;border:1px solid #ffd2bd;padding:9px 11px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700}.phone-research-form{background:#fffaf7;border:1px solid #ffe0d0;border-radius:8px;padding:12px;margin:12px 0}.phone-research-form .formgrid{gap:8px}.phone-pending{border:1px solid #ffd9c7;background:#fffaf7;border-radius:8px;padding:11px;margin:9px 0;font-size:12px;line-height:1.6}.phone-pending small{display:block;color:#777;overflow-wrap:anywhere}
 
-#languageSelect{width:100%;padding:11px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;font-size:14px}\n#accountSettings{margin:10px 0;padding:14px;background:#fffaf7;border:1px solid #ffe0d0}\n</style>
+#languageSelect{width:100%;padding:11px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;font-size:14px}\n#accountSettings{margin:10px 0;padding:14px;background:#fffaf7;border:1px solid #ffe0d0}\n
+/* Dedicated admin control-center appearance (customer storefront remains unchanged) */
+.admin-route{background:#eef2f7;color:#1e293b}
+.admin-route header,.admin-route footer{display:none!important}
+.admin-route main{max-width:1180px;padding:18px 12px 40px}
+.admin-route #adminPage.page{display:block!important;background:transparent;box-shadow:none;border:0;border-radius:0;padding:0;margin:0}
+.admin-route #adminPage>h2{margin:0 0 16px;padding:19px 18px;background:linear-gradient(120deg,#101d35,#233b5d);color:#fff;border-radius:12px;font-size:21px;letter-spacing:.2px;box-shadow:0 5px 18px #14243b26}
+.admin-route #adminPage>h2:before{content:"GS";display:inline-grid;place-items:center;width:36px;height:36px;margin-right:10px;border-radius:9px;background:#f85606;color:#fff;font-size:15px;vertical-align:middle}
+.admin-route #loginBox{max-width:460px;margin:35px auto;padding:22px;background:#fff;border:1px solid #dce4ee;border-radius:13px;box-shadow:0 8px 28px #20334d12}
+.admin-route #loginBox .muted{font-size:13px}
+.admin-route #loginBox input{background:#f8fafc;border-color:#d7e0eb}
+.admin-route #loginBox .actions button:first-child{background:#f85606;flex:1}
+.admin-route #adminWelcome{padding:11px 14px;margin:0 0 14px;background:#e0f2fe;border:1px solid #bae6fd;border-left:4px solid #0284c7;border-radius:7px;color:#075985;font-weight:700}
+.admin-route .admin-dashboard{margin:0 0 20px}
+.admin-route .admin-dashboard>.sectionhead{padding:0 2px 10px;border-bottom:2px solid #d7e0eb}
+.admin-route .admin-dashboard>.sectionhead h2{color:#172b4d;font-size:19px}
+.admin-route .dashboard-card{background:#fff;border:1px solid #dce4ee;border-radius:11px;padding:15px;box-shadow:0 2px 8px #1e293b08;border-top:3px solid #64748b}
+.admin-route .dashboard-card:nth-child(2){border-top-color:#f59e0b}
+.admin-route .dashboard-card:nth-child(3){border-top-color:#10b981}
+.admin-route .dashboard-card:nth-child(4){border-top-color:#3b82f6}
+.admin-route .dashboard-card.sales{background:#fff7ed;border-color:#fed7aa;border-top-color:#f85606}
+.admin-route .dashboard-card:nth-child(6){border-top-color:#8b5cf6}
+.admin-route .dashboard-card small,.admin-route .dashboard-card span{color:#64748b;font-size:11px}
+.admin-route .dashboard-card strong{color:#172b4d;font-size:25px}
+.admin-route .dashboard-card.sales strong{color:#ea580c}
+.admin-route .dashboard-panel{background:#fff;border:1px solid #dce4ee;border-radius:11px;padding:15px;margin-top:12px;box-shadow:0 2px 8px #1e293b08}
+.admin-route .dashboard-panel h3{color:#172b4d;margin:0 0 12px}
+.admin-route .dashboard-panel>.sectionhead,.admin-route #adminTools>.sectionhead{padding:0 0 9px;margin:20px 0 12px;border-bottom:1px solid #dce4ee}
+.admin-route .dashboard-panel>.sectionhead h2,.admin-route #adminTools>.sectionhead h2{color:#172b4d;font-size:17px}
+.admin-route label{color:#334155;font-size:12px}
+.admin-route input,.admin-route select,.admin-route textarea{background:#f8fafc;border:1px solid #d5deea;border-radius:7px;color:#1e293b}
+.admin-route input:focus,.admin-route select:focus,.admin-route textarea:focus{outline:2px solid #bfdbfe;border-color:#3b82f6}
+.admin-route #adminTools> .formgrid{background:#fff;padding:14px;border:1px solid #dce4ee;border-radius:10px}
+.admin-route .adminitem{background:#fff;border-color:#dce4ee;border-radius:9px;padding:13px}
+.admin-route .adminitem button,.admin-route .dashboard-panel button{border-radius:7px}
+.admin-route button{border-radius:7px}
+.admin-route button.secondary{background:#e8eef6;color:#334155;border:1px solid #d5deea}
+.admin-route button.danger{background:#dc2626;color:#fff}
+.admin-route #adminProductList,.admin-route #adminOrderList,.admin-route #adminChatList,.admin-route #adminReturnList,.admin-route #adminReviewList{margin-bottom:12px}
+.admin-route .phone-research-form{background:#f8fafc;border:1px solid #dce4ee;border-radius:10px}
+.admin-route .phone-source-links a{border-radius:7px}
+.admin-route #settingsMessage,.admin-route #productMessage{font-weight:700}
+@media(min-width:760px){
+ .admin-route main{padding:24px 22px 50px}
+ .admin-route .dashboard-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+ .admin-route #adminPage>h2{padding:22px 24px;font-size:24px}
+ .admin-route #adminTools>.dashboard-panel{padding:19px}
+}
+
+</style>
 <script>document.documentElement.classList.toggle("admin-route",new URLSearchParams(location.search).get("admin")==="1");</script>
 </head>
 <body>
