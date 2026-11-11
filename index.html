@@ -419,9 +419,9 @@ function saveCart(){localStorage.setItem("sfGalleryCart",JSON.stringify(cart));r
 window.addToCart=id=>{
  const p=products[id];if(!p)return;
  if(p.stock==="Out of Stock"||(p.stockQty!==undefined&&Number(p.stockQty)<=0)){alert("দুঃখিত, এই পণ্যটি এখন Stock-এ নেই।");return;}
- cart[id]=(cart[id]||0)+1;saveCart();$("cartMessage").textContent="পণ্যটি Cart-এ যোগ হয়েছে।";
+ if(p.stockQty!==undefined&&(cart[id]||0)>=Number(p.stockQty)){alert("এই পরিমাণ পণ্য Stock-এ নেই।");return;}cart[id]=(cart[id]||0)+1;saveCart();$("cartMessage").textContent="পণ্যটি Cart-এ যোগ হয়েছে।";
 };
-window.changeCartQty=(id,delta)=>{if(!cart[id])return;cart[id]=Math.max(0,cart[id]+delta);if(!cart[id])delete cart[id];saveCart();};
+window.changeCartQty=(id,delta)=>{if(!cart[id])return;const p=products[id];if(delta>0&&p?.stockQty!==undefined&&cart[id]>=Number(p.stockQty)){alert("Stock-এর বেশি নেওয়া যাবে না।");return;}cart[id]=Math.max(0,cart[id]+delta);if(!cart[id])delete cart[id];saveCart();};
 window.removeCartItem=id=>{delete cart[id];saveCart();};
 function cartEntries(){return Object.entries(cart).filter(([id,qty])=>products[id]&&qty>0);}
 function updateBottomNav(){
@@ -457,7 +457,7 @@ window.placeCartOrder=async()=>{
  if(!name||!phone||!address)return $("checkoutMessage").textContent="নাম, মোবাইল নম্বর ও ঠিকানা দিন।";
  if(phone.length<10||phone.length>16)return $("checkoutMessage").textContent="সঠিক মোবাইল নম্বর দিন।";
  if(paymentMethod!=="COD"){const key={bKash:"bkashNumber",Nagad:"nagadNumber",Rocket:"rocketNumber",Upay:"upayNumber"}[paymentMethod];if(!settings[key])return $("checkoutMessage").textContent="Admin এখনো এই Wallet নম্বর সেট করেননি।";if(!transactionId)return $("checkoutMessage").textContent="পেমেন্টের Transaction ID লিখুন।";}
- for(const [id,q] of entries){if(!products[id]||products[id].stock==="Out of Stock")return $("checkoutMessage").textContent="একটি পণ্য Stock-এ নেই। Cart ঠিক করুন।";}
+ for(const [id,q] of entries){if(!products[id]||products[id].stock==="Out of Stock"||(products[id].stockQty!==undefined&&q>Number(products[id].stockQty)))return $("checkoutMessage").textContent="একটি পণ্যের পর্যাপ্ত Stock নেই। Cart-এর Quantity কমান।";}
  const items=entries.map(([id,qty])=>{const p=products[id],unitPrice=Number(p.offer||p.price||0);return {productId:id,productName:(p.brand||"")+" "+(p.name||""),qty,unitPrice,lineTotal:unitPrice*qty};});
  const subtotal=items.reduce((n,item)=>n+item.lineTotal,0),deliveryCharge=getDeliveryFee(),discount=Math.min(couponDiscount,subtotal),total=subtotal+deliveryCharge-discount;
  $("checkoutMessage").textContent="অর্ডার পাঠানো হচ্ছে...";
@@ -580,7 +580,7 @@ window.changePaymentStatus=async(uid,oid)=>{if(!isAdmin)return;const paymentStat
 window.changeOrderStatus=async(uid,oid)=>{
  if(!isAdmin)return;
  const status=$("status_"+oid).value,now=Date.now();
- try{await update(ref(db,"orders/"+uid+"/"+oid),{status,updatedAt:now,["statusHistory/"+status]:now});await set(ref(db,"notifications/"+uid+"/"+oid),{message:"আপনার অর্ডারের অবস্থা "+status+" হয়েছে।",createdAt:now,read:false});}
+ try{const order=allOrders?.[uid]?.[oid]||{};await update(ref(db,"orders/"+uid+"/"+oid),{status,updatedAt:now,["statusHistory/"+status]:now});if(status==="Confirmed"&&!order.stockDeducted){const items=order.items|| (order.productId?[{productId:order.productId,qty:1}]:[]);for(const item of items){const p=products[item.productId];if(p&&p.stockQty!==undefined){const qty=Math.max(0,Number(p.stockQty)-Number(item.qty||1));await update(ref(db,"products/"+item.productId),{stockQty:qty,stock:qty===0?"Out of Stock":"Available"});}}await update(ref(db,"orders/"+uid+"/"+oid),{stockDeducted:true});}await set(ref(db,"notifications/"+uid+"/"+oid),{message:"আপনার অর্ডারের অবস্থা "+status+" হয়েছে।",createdAt:now,read:false});}
  catch(e){alert("Status update হয়নি: "+e.message);}
 };
 
