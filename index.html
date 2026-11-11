@@ -59,7 +59,7 @@
 <label>Description</label><textarea id="pDescription" placeholder="ফোনের বিবরণ"></textarea>
 <div class="actions"><button onclick="saveProduct()">Save Product</button><button class="secondary" onclick="clearProductForm()">Clear Form</button></div>
 <p id="productMessage"></p>
-<div class="sectionhead"><h2>পণ্যের তালিকা</h2></div><div id="adminProductList"></div>
+<div class="sectionhead"><h2>পণ্যের তালিকা</h2></div><div id="adminProductList"></div><div class="sectionhead"><h2>Customer Orders</h2></div><div id="adminOrderList"></div>
 <div class="sectionhead"><h2>অ্যাপ Customize</h2></div>
 <label>App Name</label><input id="settingTitle" placeholder="SF-Gallery">
 <label>Logo Text</label><input id="settingLogo" maxlength="5" placeholder="SF">
@@ -80,11 +80,11 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { getDatabase, ref, onValue, push, set, remove } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
+import { getDatabase, ref, onValue, push, set, update, remove } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
 const firebaseConfig={apiKey:"AIzaSyCFpaSBdmR_wWm0j426JxR6WUy_QeBnmo8",authDomain:"sf-gallery-ec41d.firebaseapp.com",databaseURL:"https://sf-gallery-ec41d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"sf-gallery-ec41d",storageBucket:"sf-gallery-ec41d.firebasestorage.app",messagingSenderId:"671129281461",appId:"1:671129281461:web:15e3016202dff3e0622ffc"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 const ADMIN_UID="aDD6jv8lJsQMZB186oPBy0TC1Hy1";
-let products={},settings={},activeBrand="All",isAdmin=false,customerUser=null,authMode="login";
+let products={},settings={},activeBrand="All",isAdmin=false,customerUser=null,authMode="login",customerOrders={},allOrders={};
 const $=id=>document.getElementById(id);
 const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 window.showPage=id=>{
@@ -97,7 +97,7 @@ window.openProduct=id=>{
  const p=products[id];if(!p)return;
  const image=p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" style="width:100%;max-height:340px;object-fit:contain;background:#fff;border-radius:14px">':'<div style="height:220px;display:grid;place-items:center;font-size:76px;background:#f4f7fc;border-radius:14px">📱</div>';
  $('productDetailContent').innerHTML='<div style="margin:16px 0">'+image+'</div><h2 style="color:#172b4d;margin-bottom:8px">'+safe(p.brand)+' '+safe(p.name)+'</h2><p class="muted" style="font-size:15px;margin:8px 0">RAM: '+safe(p.ram||"উল্লেখ নেই")+' · Storage: '+safe(p.storage||"উল্লেখ নেই")+'</p><div class="price" style="font-size:24px">'+(p.offer?'<s class="muted" style="font-size:15px">৳'+safe(p.price)+'</s> ৳'+safe(p.offer):'৳'+safe(p.price))+'</div><p class="stock '+(p.stock==="Out of Stock"?"out":"")+'" style="font-size:14px">'+safe(p.stock||"Available")+'</p><h3 style="margin:18px 0 8px">বিস্তারিত বিবরণ</h3><p style="line-height:1.7;white-space:pre-wrap">'+safe(p.description||"এই ফোনের অতিরিক্ত বিবরণ এখনো যোগ করা হয়নি।")+'</p><div class="actions"><button class="secondary" onclick="showPage(\'home\')">← Back to Home</button></div>';
- showPage("detail");
+ const orderBtn=document.createElement("button");orderBtn.textContent="Order Now";orderBtn.onclick=()=>window.startOrder(id);$("productDetailContent").append(orderBtn);\n showPage("detail");
 };
 $("productGrid").addEventListener("click",e=>{const card=e.target.closest("[data-product-id]");if(card)window.openProduct(card.dataset.productId);});
 $("productGrid").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){const card=e.target.closest("[data-product-id]");if(card){e.preventDefault();window.openProduct(card.dataset.productId);}}});
@@ -138,7 +138,7 @@ window.submitCustomerAuth=async()=>{
    if(cleanPhone.length<10||cleanPhone.length>16||!(/^[0-9]/.test(cleanPhone)||cleanPhone.startsWith("+")))throw new Error("সঠিক মোবাইল নম্বর দিন।");
    if(password.length<6)throw new Error("Password কমপক্ষে ৬ অক্ষরের হতে হবে।");
    const cred=await createUserWithEmailAndPassword(auth,email,password);
-   await updateProfile(cred.user,{displayName:name});
+   await updateProfile(cred.user,{displayName:name});\n   await set(ref(db,"customers/"+cred.user.uid),{name,phone:cleanPhone,email,createdAt:Date.now()});
   }else{await signInWithEmailAndPassword(auth,email,password);}
   customerUser=auth.currentUser;$("authMessage").textContent="সফল হয়েছে!";showPage("home");
  }catch(e){$("authMessage").textContent=e.message||"সমস্যা হয়েছে। আবার চেষ্টা করুন।";}
@@ -168,6 +168,51 @@ window.editProduct=id=>{const p=products[id];if(!p||!isAdmin)return;$("editId").
 window.deleteProduct=async id=>{if(!isAdmin)return;if(confirm("এই Product মুছে ফেলবে?")){try{await remove(ref(db,"products/"+id));$("productMessage").textContent="Product delete হয়েছে।";}catch(e){alert("Delete হয়নি: "+e.message);}}};
 function renderAdminList(){if(!$("adminProductList")||!isAdmin)return;const entries=Object.entries(products);$("adminProductList").innerHTML=entries.length?entries.map(([id,p])=>'<div class="adminitem"><div><b>'+safe(p.brand)+' '+safe(p.name)+'</b><small>৳'+safe(p.price)+' · '+safe(p.stock)+'</small></div><div class="actions"><button class="secondary" onclick="editProduct(\''+id+'\')">Edit</button><button class="danger" onclick="deleteProduct(\''+id+'\')">Delete</button></div></div>').join(""):'<p class="muted">এখনো কোনো Product নেই।</p>';}
 window.saveSettings=async()=>{if(!isAdmin)return;const data={title:$("settingTitle").value.trim()||"SF-Gallery",logo:$("settingLogo").value.trim()||"SF",heroTitle:$("settingHeroTitle").value.trim()||"SF-Gallery",heroText:$("settingHeroText").value.trim(),color:$("settingColor").value};try{await set(ref(db,"siteSettings"),data);$("settingsMessage").textContent="Customize save হয়েছে!";}catch(e){$("settingsMessage").textContent="Save হয়নি: "+e.message;}};
+
+window.startOrder=id=>{
+ if(!customerUser){showPage("auth");return;}
+ const p=products[id];if(!p)return;
+ if(p.stock==="Out of Stock"){alert("দুঃখিত, এই পণ্যটি এখন Stock-এ নেই।");return;}
+ window.currentOrderProductId=id;
+ $("orderProductName").textContent=(p.brand||"")+" "+(p.name||"")+" — ৳"+(p.offer||p.price||0);
+ $("orderName").value=customerUser.displayName||"";
+ $("orderPhone").value="";$("orderAddress").value="";$("orderNote").value="";
+ $("orderMessage").textContent="";showPage("order");
+};
+window.placeOrder=async()=>{
+ if(!customerUser){showPage("auth");return;}
+ const id=window.currentOrderProductId,p=products[id];
+ const name=$("orderName").value.trim(),phone=$("orderPhone").value.trim().replaceAll(" ","").replaceAll("-",""),address=$("orderAddress").value.trim(),note=$("orderNote").value.trim();
+ if(!p)return $("orderMessage").textContent="পণ্যটি পাওয়া যাচ্ছে না।";
+ if(!name||!phone||!address)return $("orderMessage").textContent="নাম, মোবাইল নম্বর ও সম্পূর্ণ ঠিকানা দিন।";
+ if(phone.length<10||phone.length>16)return $("orderMessage").textContent="সঠিক মোবাইল নম্বর দিন।";
+ $("orderMessage").textContent="অর্ডার পাঠানো হচ্ছে...";
+ try{
+  const orderRef=push(ref(db,"orders/"+customerUser.uid));
+  await set(orderRef,{uid:customerUser.uid,customerName:name,phone,address,note,productId:id,productName:(p.brand||"")+" "+(p.name||""),price:Number(p.offer||p.price||0),status:"Pending",createdAt:Date.now()});
+  await update(ref(db,"customers/"+customerUser.uid),{name,phone,email:customerUser.email||""});
+  $("orderMessage").textContent="অর্ডার সফল হয়েছে! My Account থেকে Status দেখতে পারবেন।";
+  $("orderAddress").value="";$("orderNote").value="";
+ }catch(e){$("orderMessage").textContent="অর্ডার হয়নি: "+e.message;}
+};
+function renderCustomerOrders(){
+ const el=$("customerOrderList");if(!el)return;
+ const entries=Object.entries(customerOrders||{}).sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
+ el.innerHTML=entries.length?entries.map(([id,o])=>'<div class="adminitem"><div><b>'+safe(o.productName)+'</b><small>৳'+safe(o.price)+' · '+safe(o.status||"Pending")+'<br>'+safe(o.address)+'</small></div></div>').join(""):'<p class="muted">এখনো কোনো অর্ডার করেননি।</p>';
+}
+function renderAdminOrders(){
+ const el=$("adminOrderList");if(!el||!isAdmin)return;
+ const rows=[];Object.entries(allOrders||{}).forEach(([uid,orders])=>Object.entries(orders||{}).forEach(([oid,o])=>rows.push({uid,oid,o})));
+ rows.sort((a,b)=>(b.o.createdAt||0)-(a.o.createdAt||0));
+ el.innerHTML=rows.length?rows.map(({uid,oid,o})=>'<div class="adminitem" style="display:block"><b>'+safe(o.productName)+'</b><small>Customer: '+safe(o.customerName)+' · '+safe(o.phone)+'<br>Address: '+safe(o.address)+'<br>Price: ৳'+safe(o.price)+' · '+new Date(o.createdAt||0).toLocaleString("bn-BD")+'<br>Note: '+safe(o.note||"—")+'</small><div class="actions"><select id="status_'+safe(oid)+'"><option value="Pending" '+(o.status==="Pending"?"selected":"")+'>Pending</option><option value="Confirmed" '+(o.status==="Confirmed"?"selected":"")+'>Confirmed</option><option value="Delivered" '+(o.status==="Delivered"?"selected":"")+'>Delivered</option><option value="Cancelled" '+(o.status==="Cancelled"?"selected":"")+'>Cancelled</option></select><button onclick="changeOrderStatus(\''+uid+'\',\''+oid+'\')">Update Status</button></div></div>').join(""):'<p class="muted">এখনো কোনো Customer Order নেই।</p>';
+}
+window.changeOrderStatus=async(uid,oid)=>{
+ if(!isAdmin)return;
+ const status=$("status_"+oid).value;
+ try{await update(ref(db,"orders/"+uid+"/"+oid),{status,updatedAt:Date.now()});}
+ catch(e){alert("Status update হয়নি: "+e.message);}
+};
+
 renderProducts();
 setAuthMode("login");
 </script>
