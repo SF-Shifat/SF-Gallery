@@ -208,7 +208,6 @@ window.placeCartOrder=async()=>{
  const entries=cartEntries(),name=$("checkoutName").value.trim(),phone=$("checkoutPhone").value.trim().replaceAll(" ","").replaceAll("-",""),address=$("checkoutAddress").value.trim(),note=$("checkoutNote").value.trim(),area=$("deliveryArea").value,paymentMethod=$("paymentMethod").value,transactionId=$("paymentTrxId").value.trim();
  if(!entries.length)return $("checkoutMessage").textContent="Cart খালি।";
  if(!name||!phone||!address)return $("checkoutMessage").textContent="নাম, মোবাইল নম্বর ও ঠিকানা দিন।";
- if(/ঢাকা|dhaka/i.test(address))return $("checkoutMessage").textContent="দুঃখিত, ঢাকা এলাকায় ডেলিভারি দেওয়া হচ্ছে না। অন্য ঠিকানা দিন।";
  if(phone.length<10||phone.length>16)return $("checkoutMessage").textContent="সঠিক মোবাইল নম্বর দিন।";
  if(paymentMethod!=="COD"){const key={bKash:"bkashNumber",Nagad:"nagadNumber",Rocket:"rocketNumber",Upay:"upayNumber"}[paymentMethod];if(!settings[key])return $("checkoutMessage").textContent="Admin এখনো এই Wallet নম্বর সেট করেননি।";if(!transactionId)return $("checkoutMessage").textContent="পেমেন্টের Transaction ID লিখুন।";}
  for(const [id,q] of entries){if(!products[id]||products[id].stock==="Out of Stock")return $("checkoutMessage").textContent="একটি পণ্য Stock-এ নেই। Cart ঠিক করুন।";}
