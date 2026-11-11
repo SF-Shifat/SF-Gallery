@@ -184,9 +184,7 @@ body{padding-bottom:0}
 
 .phone-source-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.phone-source-links a{display:inline-block;background:#fff0e8;color:#d94800;border:1px solid #ffd2bd;padding:9px 11px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700}.phone-research-form{background:#fffaf7;border:1px solid #ffe0d0;border-radius:8px;padding:12px;margin:12px 0}.phone-research-form .formgrid{gap:8px}.phone-pending{border:1px solid #ffd9c7;background:#fffaf7;border-radius:8px;padding:11px;margin:9px 0;font-size:12px;line-height:1.6}.phone-pending small{display:block;color:#777;overflow-wrap:anywhere}
 
-#languageSelect{width:100%;padding:11px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;font-size:14px}
-#accountSettings{margin:10px 0;padding:14px;background:#fffaf7;border:1px solid #ffe0d0}
-
+#languageSelect{width:100%;padding:11px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;font-size:14px}\n#accountSettings{margin:10px 0;padding:14px;background:#fffaf7;border:1px solid #ffe0d0}\n
 /* Dedicated admin control-center appearance (customer storefront remains unchanged) */
 .admin-route{background:#eef2f7;color:#1e293b}
 .admin-route header,.admin-route footer{display:none!important}
@@ -344,11 +342,10 @@ body{padding-bottom:0}
 <footer class="shop-bottom-nav"><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="document.getElementById('brandFilters').scrollIntoView({behavior:'smooth',block:'center'})"><span>▦</span>Category</button><button id="cartNavButton" onclick="showPage('cart')"><span class="nav-icon-wrap">🛒<b id="cartNavCount" class="nav-count" style="display:none">0</b></span>Cart</button><button id="accountNavButton" onclick="showPage('account')"><span>👤</span>Account</button></footer>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import { getDatabase, ref, onValue, push, set, update, remove } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
 const firebaseConfig={apiKey:"AIzaSyCFpaSBdmR_wWm0j426JxR6WUy_QeBnmo8",authDomain:"sf-gallery-ec41d.firebaseapp.com",databaseURL:"https://sf-gallery-ec41d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"sf-gallery-ec41d",storageBucket:"sf-gallery-ec41d.firebasestorage.app",messagingSenderId:"671129281461",appId:"1:671129281461:web:15e3016202dff3e0622ffc"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
-const authPersistenceReady=setPersistence(auth,browserLocalPersistence);
 const ADMIN_UID="aDD6jv8lJsQMZB186oPBy0TC1Hy1";
 const isAdminRoute=new URLSearchParams(location.search).get("admin")==="1";
 let products={},settings={},activeBrand="All",isAdmin=false,customerUser=null,authMode="login",customerOrders={},allOrders={},cart={},couponDiscount=0,currentReviewProductId=null,allReturns={},allChats={};
@@ -420,7 +417,7 @@ window.submitCustomerAuth=async()=>{
  }catch(e){$("authMessage").textContent=e.message||"সমস্যা হয়েছে। আবার চেষ্টা করুন।";}
 };
 window.customerLogout=async()=>{await signOut(auth);customerUser=null;showPage("auth");};
-window.loginAdmin=async()=>{try{await authPersistenceReady;await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);$("loginMessage").textContent="";}catch(e){$("loginMessage").textContent="Login হয়নি: Email অথবা Password পরীক্ষা করো।";}};
+window.loginAdmin=async()=>{try{await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);$("loginMessage").textContent="";}catch(e){$("loginMessage").textContent="Login হয়নি: Email অথবা Password পরীক্ষা করো।";}};
 window.logoutAdmin=async()=>{await signOut(auth);$("adminPassword").value="";};
 window.clearProductForm=()=>{["editId","pName","pRam","pStorage","pPrice","pOffer","pImage","pDescription"].forEach(id=>$(id).value="");$("pImageFile").value="";$("imageUploadMessage").textContent="";$("pBrand").value="Samsung";$("pStock").value="Available";$("pStockQty").value=10;$("productMessage").textContent="";};
 window.uploadProductImage=async()=>{
@@ -581,8 +578,7 @@ window.downloadMonthlyReport=()=>{
  }));
  rows.sort((a,b)=>(a.o.createdAt||0)-(b.o.createdAt||0));
  const headers=["Order Number","Date","Customer Name","Phone","Address","Products","Subtotal","Delivery Charge","Total","Order Status","Payment Method","Payment Status","Transaction ID","Delivery Area","Note"];
- const cell=v=>'"'+String(v??"").replaceAll('"','""').replace(/[\\r\
-]+/g," ")+'"';
+ const cell=v=>'"'+String(v??"").replaceAll('"','""').replace(/[\\r\\n]+/g," ")+'"';
  const lines=[headers,...rows.map(({oid,o})=>[
   o.orderNumber||("SFG-"+oid.slice(-7).toUpperCase()),
   o.createdAt?new Date(o.createdAt).toLocaleString("en-GB"):"",
@@ -591,8 +587,7 @@ window.downloadMonthlyReport=()=>{
   o.price??0,o.deliveryCharge??0,o.totalPrice??o.price??0,o.status||"Pending",
   o.paymentMethod||"Cash on Delivery",o.paymentStatus||"Pay on Delivery",
   o.transactionId,o.deliveryArea,o.note
- ])].map(row=>row.map(cell).join(",")).join("\r
-");
+ ])].map(row=>row.map(cell).join(",")).join("\r\n");
  const blob=new Blob(["\\uFEFF"+lines],{type:"text/csv;charset=utf-8;"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");
  a.href=url;a.download="Get Shope-Sales-"+month+".csv";
