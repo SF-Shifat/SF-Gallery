@@ -84,6 +84,7 @@ footer button{color:#f85606;background:transparent}
 .shop-bottom-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;color:#777;font-size:11px}
 .shop-bottom-nav button:first-child{color:#f85606;font-weight:bold}
 .shop-bottom-nav span{font-size:20px;margin:0}
+.shop-bottom-nav .nav-icon-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}.shop-bottom-nav .nav-count{position:absolute;top:-7px;right:-13px;min-width:17px;height:17px;padding:0 4px;border-radius:10px;background:#f85606;color:#fff;font-size:10px;line-height:17px;text-align:center;font-weight:700;border:1px solid #fff}
 body{padding-bottom:0}
 @media(min-width:650px){
 .shop-header{padding-left:max(18px,calc((100% - 1100px)/2));padding-right:max(18px,calc((100% - 1100px)/2))}
@@ -226,7 +227,7 @@ body{padding-bottom:0}
 </section>
 <section class="page" id="orderPage"><h2>অর্ডার করুন</h2><p id="orderProductName" class="muted"></p><label>আপনার নাম</label><input id="orderName" placeholder="পুরো নাম"><label>মোবাইল নম্বর</label><input id="orderPhone" type="tel" placeholder="01XXXXXXXXX"><label>সম্পূর্ণ ঠিকানা</label><textarea id="orderAddress" placeholder="বাড়ি, রাস্তা, এলাকা, জেলা"></textarea><label>অতিরিক্ত তথ্য</label><textarea id="orderNote" placeholder="ঐচ্ছিক"></textarea><div class="actions"><button onclick="placeOrder()">অর্ডার নিশ্চিত করুন</button><button class="secondary" onclick="showPage(&quot;home&quot;)">ফিরে যান</button></div><p id="orderMessage" class="muted"></p></section><section class="page" id="aboutPage"><h2>About Us</h2><p>SF-Gallery — আপনার স্মার্টফোন কেনাকাটার সহজ ঠিকানা।</p><div class="actions"><button onclick="showPage('home')">Back Home</button></div></section>
 </main>
-<footer class="shop-bottom-nav"><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="document.getElementById('brandFilters').scrollIntoView({behavior:'smooth',block:'center'})"><span>▦</span>Category</button><button onclick="showPage('cart')"><span>🛒</span>Cart</button><button onclick="showPage('account')"><span>👤</span>Account</button></footer>
+<footer class="shop-bottom-nav"><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="document.getElementById('brandFilters').scrollIntoView({behavior:'smooth',block:'center'})"><span>▦</span>Category</button><button id="cartNavButton" onclick="showPage('cart')"><span class="nav-icon-wrap">🛒<b id="cartNavCount" class="nav-count" style="display:none">0</b></span>Cart</button><button id="accountNavButton" onclick="showPage('account')"><span>👤</span>Account</button></footer>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
@@ -269,7 +270,7 @@ function applySettings(){document.title=settings.title||"SF-Gallery";$("appTitle
 onAuthStateChanged(auth,user=>{
  isAdmin=!!user&&user.uid===ADMIN_UID;
  customerUser=user&&!isAdmin?user:null;
- if($("accountButton"))$("accountButton").textContent=customerUser?"My Account":"Login";
+ if($("accountButton"))$("accountButton").textContent=customerUser?"My Account":"Login";updateBottomNav();
  if(customerUser){$("customerWelcome").textContent="স্বাগতম, "+(user.displayName||"Customer");$("customerEmailView").textContent=user.email||"";onValue(ref(db,"customers/"+user.uid),s=>{const profile=s.val()||{};if(profile.name)$("customerWelcome").textContent="স্বাগতম, "+profile.name;});onValue(ref(db,"orders/"+user.uid),s=>{customerOrders=s.val()||{};renderCustomerOrders();});}else{customerOrders={};renderCustomerOrders();}if(isAdmin){onValue(ref(db,"orders"),s=>{allOrders=s.val()||{};renderAdminOrders();});}
  if(!isAdmin&&!isAdminRoute)showPage(customerUser?"home":"auth");$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
 window.setAuthMode=mode=>{
@@ -332,9 +333,15 @@ window.addToCart=id=>{
 window.changeCartQty=(id,delta)=>{if(!cart[id])return;cart[id]=Math.max(0,cart[id]+delta);if(!cart[id])delete cart[id];saveCart();};
 window.removeCartItem=id=>{delete cart[id];saveCart();};
 function cartEntries(){return Object.entries(cart).filter(([id,qty])=>products[id]&&qty>0);}
+function updateBottomNav(){
+ const count=Object.values(cart).reduce((n,q)=>n+Math.max(0,Number(q)||0),0),badge=$("cartNavCount"),account=$("accountNavButton");
+ if(badge){badge.textContent=count>99?"99+":String(count);badge.style.display=count>0?"inline-block":"none";}
+ if(account)account.lastChild.textContent=customerUser?"My Account":"Account";
+}
 function renderCart(){
- const entries=cartEntries(),el=$("cartItems");if(!el)return;
- const count=entries.reduce((n,[id,q])=>n+q,0);const cartButton=$("cartButton");if(cartButton)cartButton.textContent="🛒 Cart ("+count+")";
+ const entries=cartEntries(),el=$("cartItems");
+ const count=entries.reduce((n,[id,q])=>n+q,0);const cartButton=$("cartButton");if(cartButton)cartButton.textContent="🛒 Cart ("+count+")";updateBottomNav();
+ if(!el)return;
  el.innerHTML=entries.length?entries.map(([id,q])=>{const p=products[id],price=Number(p.offer||p.price||0);return '<div class="cart-line">'+(p.image?'<img src="'+safe(p.image)+'">':'<div style="width:64px;font-size:32px">📱</div>')+'<div style="flex:1"><b>'+safe(p.brand)+' '+safe(p.name)+'</b><div class="muted">৳'+price.toLocaleString("en-IN")+' × '+q+'</div><div class="qty-controls"><button onclick="changeCartQty(\''+id+'\',-1)">−</button><b>'+q+'</b><button onclick="changeCartQty(\''+id+'\',1)">+</button><button class="danger" onclick="removeCartItem(\''+id+'\')">Remove</button></div></div><b>৳'+(price*q).toLocaleString("en-IN")+'</b></div>';}).join(""):'<div class="empty">আপনার Cart খালি। পছন্দের পণ্য Add to Cart করুন।</div>';
  const subtotal=entries.reduce((n,[id,q])=>n+Number(products[id].offer||products[id].price||0)*q,0);
  $("cartTotals").innerHTML=entries.length?'<div class="summary-row"><span>পণ্যের মোট দাম</span><b>৳'+subtotal.toLocaleString("en-IN")+'</b></div>':'';
