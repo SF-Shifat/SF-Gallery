@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,144 +7,94 @@
 <link rel="manifest" href="./manifest.json">
 <title>SF-Gallery</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f5f8ff;color:#172b4d}
-header{background:white;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px #dce6f5}
-.logo{display:flex;align-items:center;gap:10px;color:#1769d2}
-.logo-icon{background:#1769d2;color:white;padding:10px;border-radius:12px;font-weight:bold}
-.menu{font-size:25px;color:#1769d2;border:0;background:none;cursor:pointer}
-#menuBox{display:none;background:white;padding:15px;box-shadow:0 3px 10px #ddd}
-#menuBox a{display:block;padding:10px;color:#1769d2;text-decoration:none}
-main{padding:20px 18px 100px}
-.welcome{background:linear-gradient(135deg,#1769d2,#48a0f5);color:white;padding:30px 22px;border-radius:22px;margin-top:12px}
-.welcome h1{font-size:29px;margin:15px 0}
-.welcome p{line-height:1.7}
-button{cursor:pointer}
-.explore{margin-top:20px;background:white;color:#1769d2;border:0;border-radius:10px;padding:12px 22px;font-weight:bold}
-.section-title{margin:30px 0 15px;font-size:20px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.item{background:white;padding:22px 12px;border-radius:17px;text-align:center;box-shadow:0 4px 15px #dce6f5;border:0;width:100%;color:#172b4d}
-.item .icon{font-size:30px;margin-bottom:10px}
-.item h3{font-size:15px;margin-bottom:6px}
-.item p{font-size:12px;color:#8493a8}
-.page{display:none;background:white;padding:22px;border-radius:17px;margin-top:20px;line-height:1.8;box-shadow:0 4px 15px #dce6f5}
-.page h2{color:#1769d2;margin-bottom:12px}
-.page button{background:#1769d2;color:white;border:0;padding:10px 18px;border-radius:8px;margin-top:15px}
-.page input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccd8e8;border-radius:8px}
-footer{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:12px 5px;box-shadow:0 -3px 15px #dce6f5}
-footer button{border:0;background:none;color:#1769d2;font-size:12px}
-footer span{display:block;font-size:21px;margin-bottom:4px}
+:root{--primary:#1769d2;--soft:#edf4ff}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fc;color:#172b4d}header{background:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px #dce6f5;position:sticky;top:0;z-index:5}.brand{display:flex;align-items:center;gap:10px}.logo{background:var(--primary);color:white;padding:10px 12px;border-radius:11px;font-weight:bold}.brand h2{font-size:19px;margin:0}.headerbtn,button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--primary);color:#fff;font-weight:600}.headerbtn{padding:9px 11px}main{max-width:900px;margin:auto;padding:16px 14px 95px}.hero{background:linear-gradient(135deg,var(--primary),#55a5f5);color:#fff;padding:25px 20px;border-radius:20px;margin:8px 0 20px}.hero h1{margin:8px 0;font-size:28px}.hero p{line-height:1.5;margin:0}.hero .tag{font-size:12px;opacity:.9}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:22px 0 12px}.sectionhead h2{font-size:20px;margin:0}.filters{display:flex;gap:8px;overflow:auto;padding:3px 0 12px}.filters button{white-space:nowrap;background:#e7effc;color:var(--primary)}.filters button.active{background:var(--primary);color:white}.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product{background:white;border-radius:15px;overflow:hidden;box-shadow:0 3px 12px #dce6f5}.product img{width:100%;height:145px;object-fit:contain;background:#fff}.product .info{padding:11px}.product h3{font-size:15px;margin:0 0 6px}.muted{color:#718096;font-size:12px}.price{color:var(--primary);font-weight:bold;margin:8px 0}.stock{font-size:12px;color:#16834a}.out{color:#c0392b}.page{display:none;background:#fff;border-radius:16px;padding:18px;margin-top:12px;box-shadow:0 3px 14px #dce6f5}.page h2{margin:0 0 14px;color:var(--primary)}label{display:block;font-size:13px;font-weight:bold;margin:11px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd6e5;border-radius:9px;font:inherit;background:#fff}textarea{min-height:75px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.secondary{background:#e8effa;color:var(--primary)}.danger{background:#c0392b}.adminitem{border:1px solid #e1e8f2;padding:10px;border-radius:10px;margin:10px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}.adminitem small{display:block;color:#718096;margin-top:4px}.empty{text-align:center;padding:25px;color:#718096;background:#fff;border-radius:12px}footer{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:10px 4px;box-shadow:0 -3px 15px #dce6f5;z-index:6}footer button{background:none;color:var(--primary);padding:5px;font-size:12px}footer span{display:block;font-size:20px;margin-bottom:3px}#notice{font-size:13px;margin-top:10px;color:#16834a}.hidden{display:none!important}@media(min-width:650px){.products{grid-template-columns:repeat(3,minmax(0,1fr))}.product img{height:180px}}
 </style>
 </head>
 <body>
-
-<header>
- <div class="logo">
-  <div class="logo-icon">SF</div>
-  <h2>SF-Gallery</h2>
- </div>
- <button class="menu" onclick="toggleMenu()">☰</button>
-</header>
-
-<div id="menuBox">
- <a href="#" onclick="showPage('home')">Home</a>
- <a href="#" onclick="showPage('profile')">My Profile</a>
- <a href="#" onclick="showPage('settings')">Settings</a>
- <a href="#" onclick="showPage('about')">About Us</a>
- <a href="#" onclick="showPage('contact')">Contact</a>
-</div>
-
+<header><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div><button class="headerbtn" onclick="showPage('admin')">Admin</button></header>
 <main>
-<section id="home">
- <div class="welcome">
-  <small>WELCOME TO</small>
-  <h1>SF-Gallery</h1>
-  <p>Your Digital Experience Starts Here.<br>
-  Discover a modern, simple and beautiful experience.</p>
-  <button class="explore" onclick="document.getElementById('explore').scrollIntoView({behavior:'smooth'})">Explore Now →</button>
- </div>
-
- <h2 class="section-title" id="explore">Explore More</h2>
- <div class="grid">
-  <button class="item" onclick="showPage('profile')"><div class="icon">👤</div><h3>My Profile</h3><p>Your personal space</p></button>
-  <button class="item" onclick="showPage('settings')"><div class="icon">⚙️</div><h3>Settings</h3><p>Manage preferences</p></button>
-  <button class="item" onclick="showPage('about')"><div class="icon">ℹ️</div><h3>About Us</h3><p>Know about SF-Gallery</p></button>
-  <button class="item" onclick="showPage('contact')"><div class="icon">☎️</div><h3>Contact</h3><p>Get in touch with us</p></button>
- </div>
- <section class="page" style="display:block">
-  <h2>About SF-Gallery</h2>
-  <p>Welcome to SF-Gallery. Your destination for mobile phones and accessories.</p>
- </section>
+<section id="homePage">
+<div class="hero"><div class="tag">WELCOME TO</div><h1 id="heroTitle">SF-Gallery</h1><p id="heroText">আপনার পছন্দের স্মার্টফোন খুঁজে নিন।</p></div>
+<div class="sectionhead"><h2>স্মার্টফোন কালেকশন</h2><span class="muted" id="productCount">0 Products</span></div>
+<input id="searchBox" placeholder="ফোনের নাম দিয়ে খুঁজুন..." oninput="renderProducts()">
+<div class="filters" id="brandFilters"></div>
+<div class="products" id="productGrid"></div>
 </section>
-
-<section class="page" id="profile">
- <h2>My Profile</h2>
- <p>Your personal information</p>
- <input id="profileName" placeholder="Your Name">
- <input id="profilePhone" placeholder="Phone Number">
- <button onclick="saveProfile()">Save Profile</button>
- <p id="profileMessage"></p>
- <button onclick="showPage('home')">Back Home</button>
+<section class="page" id="adminPage">
+<h2>Admin Panel</h2>
+<div id="loginBox">
+<p class="muted">শুধু অনুমোদিত Admin Login করতে পারবেন।</p>
+<label>Email</label><input id="adminEmail" type="email" placeholder="Admin email">
+<label>Password</label><input id="adminPassword" type="password" placeholder="Password">
+<div class="actions"><button onclick="loginAdmin()">Login</button><button class="secondary" onclick="showPage('home')">Back</button></div>
+<p id="loginMessage" class="muted"></p>
+</div>
+<div id="adminTools" class="hidden">
+<p id="adminWelcome" class="muted">Admin হিসেবে Login করা হয়েছে।</p>
+<div class="sectionhead"><h2>পণ্য Add / Edit</h2></div>
+<input id="editId" type="hidden">
+<div class="formgrid">
+<div><label>Brand</label><select id="pBrand"><option>Samsung</option><option>Xiaomi</option><option>Realme</option><option>Vivo</option><option>OPPO</option></select></div>
+<div><label>Model Name</label><input id="pName" placeholder="যেমন: Galaxy A17"></div>
+<div><label>RAM</label><input id="pRam" placeholder="যেমন: 8GB"></div>
+<div><label>Storage</label><input id="pStorage" placeholder="যেমন: 128GB"></div>
+<div><label>Price (৳)</label><input id="pPrice" type="number" min="0" placeholder="দাম"></div>
+<div><label>Offer Price (৳)</label><input id="pOffer" type="number" min="0" placeholder="অফার না থাকলে ফাঁকা"></div>
+<div><label>Stock</label><select id="pStock"><option value="Available">Available</option><option value="Out of Stock">Out of Stock</option></select></div>
+</div>
+<label>Product Image URL</label><input id="pImage" type="url" placeholder="https://example.com/phone.jpg">
+<label>Description</label><textarea id="pDescription" placeholder="ফোনের বিবরণ"></textarea>
+<div class="actions"><button onclick="saveProduct()">Save Product</button><button class="secondary" onclick="clearProductForm()">Clear Form</button></div>
+<p id="productMessage"></p>
+<div class="sectionhead"><h2>পণ্যের তালিকা</h2></div><div id="adminProductList"></div>
+<div class="sectionhead"><h2>অ্যাপ Customize</h2></div>
+<label>App Name</label><input id="settingTitle" placeholder="SF-Gallery">
+<label>Logo Text</label><input id="settingLogo" maxlength="5" placeholder="SF">
+<label>Banner Title</label><input id="settingHeroTitle" placeholder="SF-Gallery">
+<label>Banner Text</label><textarea id="settingHeroText" placeholder="আপনার পছন্দের স্মার্টফোন খুঁজে নিন।"></textarea>
+<label>Theme Color</label><input id="settingColor" type="color" value="#1769d2">
+<div class="actions"><button onclick="saveSettings()">Save Customize</button><button class="secondary" onclick="logoutAdmin()">Logout</button></div>
+<p id="settingsMessage"></p>
+</div>
 </section>
-
-<section class="page" id="settings">
- <h2>Settings</h2>
- <p>SF-Gallery App Settings</p>
- <button onclick="alert('SF-Gallery Version 1.0')">App Version</button>
- <button onclick="showPage('home')">Back Home</button>
-</section>
-
-<section class="page" id="about">
- <h2>About Us</h2>
- <p>SF-Gallery is a mobile phone and accessories shopping platform. We aim to provide a simple shopping experience.</p>
- <button onclick="showPage('home')">Back Home</button>
-</section>
-
-<section class="page" id="contact">
- <h2>Contact Us</h2>
- <p>Contact SF-Gallery for assistance.</p>
- <input id="contactName" placeholder="Your Name">
- <input id="contactMessage" placeholder="Your Message">
- <button onclick="sendMessage()">Send Message</button>
- <button onclick="showPage('home')">Back Home</button>
-</section>
+<section class="page" id="aboutPage"><h2>About Us</h2><p>SF-Gallery — আপনার স্মার্টফোন কেনাকাটার সহজ ঠিকানা।</p><div class="actions"><button onclick="showPage('home')">Back Home</button></div></section>
 </main>
-
-<footer>
- <button onclick="showPage('home')"><span>🏠</span>Home</button>
- <button onclick="showPage('about')"><span>ℹ️</span>About</button>
- <button onclick="showPage('profile')"><span>👤</span>Profile</button>
- <button onclick="showPage('settings')"><span>⚙️</span>Settings</button>
-</footer>
-
-<script>
-function showPage(id){
- document.querySelectorAll('main > section').forEach(s=>s.style.display='none');
- const page=document.getElementById(id);
- if(page) page.style.display='block';
- document.getElementById('menuBox').style.display='none';
- window.scrollTo({top:0,behavior:'smooth'});
+<footer><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="showPage('about')"><span>ℹ️</span>About</button><button onclick="showPage('admin')"><span>🔐</span>Admin</button></footer>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { getDatabase, ref, onValue, push, set, remove } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
+const firebaseConfig={apiKey:"AIzaSyCFpaSBdmR_wWm0j426JxR6WUy_QeBnmo8",authDomain:"sf-gallery-ec41d.firebaseapp.com",databaseURL:"https://sf-gallery-ec41d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"sf-gallery-ec41d",storageBucket:"sf-gallery-ec41d.firebasestorage.app",messagingSenderId:"671129281461",appId:"1:671129281461:web:15e3016202dff3e0622ffc"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const ADMIN_UID="aDD6jv8lJsQMZB186oPBy0TC1Hy1";
+let products={},settings={},activeBrand="All",isAdmin=false;
+const $=id=>document.getElementById(id);
+const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+window.showPage=id=>{document.querySelectorAll("main>section").forEach(s=>s.style.display="none");$(id+"Page").style.display="block";window.scrollTo(0,0);if(id==="admin")$("adminPage").scrollIntoView({block:"start"});};
+window.renderProducts=renderProducts;
+function renderProducts(){
+ const q=$("searchBox").value.trim().toLowerCase(),brands=["All","Samsung","Xiaomi","Realme","Vivo","OPPO"];
+ $("brandFilters").innerHTML=brands.map(b=>'<button class="'+(activeBrand===b?'active':'')+'" onclick="setBrand(\''+b+'\')">'+b+'</button>').join("");
+ const list=Object.entries(products).filter(([id,p])=>(activeBrand==="All"||p.brand===activeBrand)&&((p.name||"").toLowerCase().includes(q)||(p.brand||"").toLowerCase().includes(q)));
+ $("productCount").textContent=list.length+" Products";
+ $("productGrid").innerHTML=list.length?list.map(([id,p])=>'<article class="product">'+(p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" onerror="this.style.display=\'none\'">':'<div style="height:145px;display:grid;place-items:center;font-size:42px">📱</div>')+'<div class="info"><h3>'+safe(p.brand)+" "+safe(p.name)+'</h3><div class="muted">'+safe(p.ram)+' / '+safe(p.storage)+'</div><div class="price">'+(p.offer?'<s class="muted">৳'+safe(p.price)+'</s> ৳'+safe(p.offer):'৳'+safe(p.price))+'</div><div class="stock '+(p.stock==="Out of Stock"?"out":"")+'">'+safe(p.stock||"Available")+'</div>'+(p.description?'<p class="muted">'+safe(p.description)+'</p>':'')+'</div></article>').join(""):'<div class="empty" style="grid-column:1/-1">এখনো কোনো ফোন যোগ করা হয়নি।</div>';
 }
-function toggleMenu(){
- const m=document.getElementById('menuBox');
- m.style.display=m.style.display==='block'?'none':'block';
-}
-function saveProfile(){
- localStorage.setItem('sfName',document.getElementById('profileName').value);
- localStorage.setItem('sfPhone',document.getElementById('profilePhone').value);
- document.getElementById('profileMessage').textContent='Profile saved on this device!';
-}
-function sendMessage(){
- const n=document.getElementById('contactName').value;
- const m=document.getElementById('contactMessage').value;
- if(!n||!m){alert('Please enter your name and message');return;}
- alert('Message form ready. Online message delivery will be connected later.');
-}
-if('serviceWorker' in navigator){
- window.addEventListener('load',()=>{
-  navigator.serviceWorker.register('./sw.js').catch(console.error);
- });
-}
+window.setBrand=b=>{activeBrand=b;renderProducts()};
+onValue(ref(db,"products"),snap=>{products=snap.val()||{};renderProducts();renderAdminList()});
+onValue(ref(db,"siteSettings"),snap=>{settings=snap.val()||{};applySettings();});
+function applySettings(){document.title=settings.title||"SF-Gallery";$("appTitle").textContent=settings.title||"SF-Gallery";$("logoText").textContent=settings.logo||"SF";$("heroTitle").textContent=settings.heroTitle||"SF-Gallery";$("heroText").textContent=settings.heroText||"আপনার পছন্দের স্মার্টফোন খুঁজে নিন।";document.documentElement.style.setProperty("--primary",settings.color||"#1769d2");if($("settingTitle")){$("settingTitle").value=settings.title||"SF-Gallery";$("settingLogo").value=settings.logo||"SF";$("settingHeroTitle").value=settings.heroTitle||"SF-Gallery";$("settingHeroText").value=settings.heroText||"আপনার পছন্দের স্মার্টফোন খুঁজে নিন।";$("settingColor").value=settings.color||"#1769d2";}}
+onAuthStateChanged(auth,user=>{isAdmin=!!user&&user.uid===ADMIN_UID;$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(user&&!isAdmin){signOut(auth);$("loginMessage").textContent="এই Account-এর Admin অনুমতি নেই।";}if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
+window.loginAdmin=async()=>{try{await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);$("loginMessage").textContent="";}catch(e){$("loginMessage").textContent="Login হয়নি: Email অথবা Password পরীক্ষা করো।";}};
+window.logoutAdmin=async()=>{await signOut(auth);$("adminPassword").value="";};
+window.clearProductForm=()=>{["editId","pName","pRam","pStorage","pPrice","pOffer","pImage","pDescription"].forEach(id=>$(id).value="");$("pBrand").value="Samsung";$("pStock").value="Available";$("productMessage").textContent="";};
+window.saveProduct=async()=>{if(!isAdmin)return alert("Admin login required");const name=$("pName").value.trim(),price=Number($("pPrice").value);if(!name||!price||price<0){$("productMessage").textContent="Model Name ও সঠিক Price দাও।";return;}const data={brand:$("pBrand").value,name,ram:$("pRam").value.trim(),storage:$("pStorage").value.trim(),price,offer:Number($("pOffer").value)||0,stock:$("pStock").value,image:$("pImage").value.trim(),description:$("pDescription").value.trim(),updatedAt:Date.now()};try{const id=$("editId").value||push(ref(db,"products")).key;await set(ref(db,"products/"+id),data);$("productMessage").textContent="Product save হয়েছে!";clearProductForm();}catch(e){$("productMessage").textContent="Save হয়নি: "+e.message;}};
+window.editProduct=id=>{const p=products[id];if(!p||!isAdmin)return;$("editId").value=id;$("pBrand").value=p.brand||"Samsung";$("pName").value=p.name||"";$("pRam").value=p.ram||"";$("pStorage").value=p.storage||"";$("pPrice").value=p.price||"";$("pOffer").value=p.offer||"";$("pStock").value=p.stock||"Available";$("pImage").value=p.image||"";$("pDescription").value=p.description||"";window.scrollTo(0,0);};
+window.deleteProduct=async id=>{if(!isAdmin)return;if(confirm("এই Product মুছে ফেলবে?")){try{await remove(ref(db,"products/"+id));$("productMessage").textContent="Product delete হয়েছে।";}catch(e){alert("Delete হয়নি: "+e.message);}}};
+function renderAdminList(){if(!$("adminProductList")||!isAdmin)return;const entries=Object.entries(products);$("adminProductList").innerHTML=entries.length?entries.map(([id,p])=>'<div class="adminitem"><div><b>'+safe(p.brand)+' '+safe(p.name)+'</b><small>৳'+safe(p.price)+' · '+safe(p.stock)+'</small></div><div class="actions"><button class="secondary" onclick="editProduct(\''+id+'\')">Edit</button><button class="danger" onclick="deleteProduct(\''+id+'\')">Delete</button></div></div>').join(""):'<p class="muted">এখনো কোনো Product নেই।</p>';}
+window.saveSettings=async()=>{if(!isAdmin)return;const data={title:$("settingTitle").value.trim()||"SF-Gallery",logo:$("settingLogo").value.trim()||"SF",heroTitle:$("settingHeroTitle").value.trim()||"SF-Gallery",heroText:$("settingHeroText").value.trim(),color:$("settingColor").value};try{await set(ref(db,"siteSettings"),data);$("settingsMessage").textContent="Customize save হয়েছে!";}catch(e){$("settingsMessage").textContent="Save হয়নি: "+e.message;}};
+renderProducts();
 </script>
-</body>
-</html>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.error));}
+</script>
+</body></html>
