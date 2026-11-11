@@ -96,7 +96,10 @@ body{padding-bottom:0}
 .catalog-panel .product img{height:185px}
 }
 
+
+.admin-route #authPage{display:none!important}.admin-route #adminPage{display:block!important}.admin-route #homePage,.admin-route #cartPage,.admin-route #checkoutPage,.admin-route #accountPage{display:none!important}
 </style>
+<script>document.documentElement.classList.toggle("admin-route",new URLSearchParams(location.search).get("admin")==="1");</script>
 </head>
 <body>
 <header class="shop-header"><div class="shop-top"><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div></div><div class="shop-search-row"><input id="searchBox" placeholder="🔍 ফোন, ব্র্যান্ড বা মডেল খুঁজুন..." oninput="renderProducts()"><button class="headerbtn cart-head" id="cartButton" onclick="showPage('cart')">🛒 <span id="cartCount">0</span></button><button class="headerbtn account-head" id="accountButton" onclick="showPage('account')">Login</button></div></header>
