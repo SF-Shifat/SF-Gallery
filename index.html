@@ -7,12 +7,21 @@
 <link rel="manifest" href="./manifest.json">
 <title>SF-Gallery</title>
 <style>
-:root{--primary:#1769d2;--soft:#edf4ff}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fc;color:#172b4d}header{background:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px #dce6f5;position:sticky;top:0;z-index:5}.brand{display:flex;align-items:center;gap:10px}.logo{background:var(--primary);color:white;padding:10px 12px;border-radius:11px;font-weight:bold}.brand h2{font-size:19px;margin:0}.headerbtn,button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--primary);color:#fff;font-weight:600}.headerbtn{padding:9px 11px}main{max-width:900px;margin:auto;padding:16px 14px 95px}.hero{background:linear-gradient(135deg,var(--primary),#55a5f5);color:#fff;padding:25px 20px;border-radius:20px;margin:8px 0 20px}.hero h1{margin:8px 0;font-size:28px}.hero p{line-height:1.5;margin:0}.hero .tag{font-size:12px;opacity:.9}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:22px 0 12px}.sectionhead h2{font-size:20px;margin:0}.filters{display:flex;gap:8px;overflow:auto;padding:3px 0 12px}.filters button{white-space:nowrap;background:#e7effc;color:var(--primary)}.filters button.active{background:var(--primary);color:white}.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product{background:white;border-radius:15px;overflow:hidden;box-shadow:0 3px 12px #dce6f5}.product img{width:100%;height:145px;object-fit:contain;background:#fff}.product .info{padding:11px}.product h3{font-size:15px;margin:0 0 6px}.muted{color:#718096;font-size:12px}.price{color:var(--primary);font-weight:bold;margin:8px 0}.stock{font-size:12px;color:#16834a}.out{color:#c0392b}.page{display:none;background:#fff;border-radius:16px;padding:18px;margin-top:12px;box-shadow:0 3px 14px #dce6f5}.page h2{margin:0 0 14px;color:var(--primary)}label{display:block;font-size:13px;font-weight:bold;margin:11px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd6e5;border-radius:9px;font:inherit;background:#fff}textarea{min-height:75px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.secondary{background:#e8effa;color:var(--primary)}.danger{background:#c0392b}.adminitem{border:1px solid #e1e8f2;padding:10px;border-radius:10px;margin:10px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}.adminitem small{display:block;color:#718096;margin-top:4px}.empty{text-align:center;padding:25px;color:#718096;background:#fff;border-radius:12px}footer{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:10px 4px;box-shadow:0 -3px 15px #dce6f5;z-index:6}footer button{background:none;color:var(--primary);padding:5px;font-size:12px}footer span{display:block;font-size:20px;margin-bottom:3px}#notice{font-size:13px;margin-top:10px;color:#16834a}.hidden{display:none!important}@media(min-width:650px){.products{grid-template-columns:repeat(3,minmax(0,1fr))}.product img{height:180px}}
+:root{--primary:#1769d2;--soft:#edf4ff}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fc;color:#172b4d}header{background:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px #dce6f5;position:sticky;top:0;z-index:5}.brand{display:flex;align-items:center;gap:10px}.logo{background:var(--primary);color:white;padding:10px 12px;border-radius:11px;font-weight:bold}.brand h2{font-size:19px;margin:0}.headerbtn,button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--primary);color:#fff;font-weight:600}.headerbtn{padding:9px 11px}main{max-width:900px;margin:auto;padding:16px 14px 95px}.hero{background:linear-gradient(135deg,var(--primary),#55a5f5);color:#fff;padding:25px 20px;border-radius:20px;margin:8px 0 20px}.hero h1{margin:8px 0;font-size:28px}.hero p{line-height:1.5;margin:0}.hero .tag{font-size:12px;opacity:.9}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:22px 0 12px}.sectionhead h2{font-size:20px;margin:0}.filters{display:flex;gap:8px;overflow:auto;padding:3px 0 12px}.filters button{white-space:nowrap;background:#e7effc;color:var(--primary)}.filters button.active{background:var(--primary);color:white}.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.product{background:white;border-radius:15px;overflow:hidden;box-shadow:0 3px 12px #dce6f5}.product img{width:100%;height:145px;object-fit:contain;background:#fff}.product .info{padding:11px}.product h3{font-size:15px;margin:0 0 6px}.muted{color:#718096;font-size:12px}.price{color:var(--primary);font-weight:bold;margin:8px 0}.stock{font-size:12px;color:#16834a}.out{color:#c0392b}.page{display:none;background:#fff;border-radius:16px;padding:18px;margin-top:12px;box-shadow:0 3px 14px #dce6f5}.page h2{margin:0 0 14px;color:var(--primary)}label{display:block;font-size:13px;font-weight:bold;margin:11px 0 5px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd6e5;border-radius:9px;font:inherit;background:#fff}textarea{min-height:75px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.secondary{background:#e8effa;color:var(--primary)}.danger{background:#c0392b}.adminitem{border:1px solid #e1e8f2;padding:10px;border-radius:10px;margin:10px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}.adminitem small{display:block;color:#718096;margin-top:4px}.empty{text-align:center;padding:25px;color:#718096;background:#fff;border-radius:12px}footer{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:10px 4px;box-shadow:0 -3px 15px #dce6f5;z-index:6}footer button{background:none;color:var(--primary);padding:5px;font-size:12px}footer span{display:block;font-size:20px;margin-bottom:3px}#notice{font-size:13px;margin-top:10px;color:#16834a}.hidden{display:none!important}.authwrap{max-width:440px;margin:24px auto}.authswitch{display:flex;gap:8px;margin:12px 0}.authswitch button{flex:1}@media(min-width:650px){.products{grid-template-columns:repeat(3,minmax(0,1fr))}.product img{height:180px}}
 </style>
 </head>
 <body>
 <header><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div><button class="headerbtn" onclick="showPage('admin')">Admin</button></header>
 <main>
+<section class="page" id="authPage"><div class="authwrap">
+<h2>Customer Account</h2><p class="muted">Email ও Password দিয়ে Login অথবা নতুন Account তৈরি করুন।</p>
+<div class="authswitch"><button id="loginTab" onclick="setAuthMode('login')">Login</button><button class="secondary" id="registerTab" onclick="setAuthMode('register')">Register</button></div>
+<div id="registerFields" class="hidden"><label>আপনার নাম</label><input id="customerName" autocomplete="name" placeholder="পুরো নাম"><label>মোবাইল নম্বর</label><input id="customerPhone" type="tel" autocomplete="tel" placeholder="01XXXXXXXXX"></div>
+<label>Email</label><input id="customerEmail" type="email" autocomplete="email" placeholder="আপনার ইমেইল">
+<label>Password</label><input id="customerPassword" type="password" autocomplete="current-password" placeholder="কমপক্ষে ৬ অক্ষর">
+<div class="actions"><button id="authSubmit" onclick="submitCustomerAuth()">Login</button><button class="secondary" onclick="showPage('home')">Back</button></div><p id="authMessage" class="muted"></p>
+</div></section>
+<section class="page" id="accountPage"><h2>My Account</h2><p id="customerWelcome"></p><p id="customerEmailView" class="muted"></p><div class="actions"><button class="secondary" onclick="showPage('home')">Home</button><button class="danger" onclick="customerLogout()">Logout</button></div></section>
 <section id="homePage">
 <div class="hero"><div class="tag">WELCOME TO</div><h1 id="heroTitle">SF-Gallery</h1><p id="heroText">আপনার পছন্দের স্মার্টফোন খুঁজে নিন।</p></div>
 <div class="sectionhead"><h2>স্মার্টফোন কালেকশন</h2><span class="muted" id="productCount">0 Products</span></div>
@@ -70,15 +79,20 @@
 <footer><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="showPage('about')"><span>ℹ️</span>About</button><button onclick="showPage('admin')"><span>🔐</span>Admin</button></footer>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import { getDatabase, ref, onValue, push, set, remove } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
 const firebaseConfig={apiKey:"AIzaSyCFpaSBdmR_wWm0j426JxR6WUy_QeBnmo8",authDomain:"sf-gallery-ec41d.firebaseapp.com",databaseURL:"https://sf-gallery-ec41d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"sf-gallery-ec41d",storageBucket:"sf-gallery-ec41d.firebasestorage.app",messagingSenderId:"671129281461",appId:"1:671129281461:web:15e3016202dff3e0622ffc"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 const ADMIN_UID="aDD6jv8lJsQMZB186oPBy0TC1Hy1";
-let products={},settings={},activeBrand="All",isAdmin=false;
+let products={},settings={},activeBrand="All",isAdmin=false,customerUser=null,authMode="login";
 const $=id=>document.getElementById(id);
 const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-window.showPage=id=>{document.querySelectorAll("main>section").forEach(s=>s.style.display="none");$(id+"Page").style.display="block";window.scrollTo(0,0);if(id==="admin")$("adminPage").scrollIntoView({block:"start"});};
+window.showPage=id=>{
+ if((id==="home"||id==="account")&&!customerUser)id="auth";
+ document.querySelectorAll("main>section").forEach(s=>s.style.display="none");
+ $(id+"Page").style.display="block";window.scrollTo(0,0);
+ if(id==="admin")$("adminPage").scrollIntoView({block:"start"});
+};
 window.openProduct=id=>{
  const p=products[id];if(!p)return;
  const image=p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" style="width:100%;max-height:340px;object-fit:contain;background:#fff;border-radius:14px">':'<div style="height:220px;display:grid;place-items:center;font-size:76px;background:#f4f7fc;border-radius:14px">📱</div>';
@@ -99,7 +113,36 @@ window.setBrand=b=>{activeBrand=b;renderProducts()};
 onValue(ref(db,"products"),snap=>{products=snap.val()||{};renderProducts();renderAdminList()});
 onValue(ref(db,"siteSettings"),snap=>{settings=snap.val()||{};applySettings();});
 function applySettings(){document.title=settings.title||"SF-Gallery";$("appTitle").textContent=settings.title||"SF-Gallery";$("logoText").textContent=settings.logo||"SF";$("heroTitle").textContent=settings.heroTitle||"SF-Gallery";$("heroText").textContent=settings.heroText||"আপনার পছন্দের স্মার্টফোন খুঁজে নিন।";document.documentElement.style.setProperty("--primary",settings.color||"#1769d2");if($("settingTitle")){$("settingTitle").value=settings.title||"SF-Gallery";$("settingLogo").value=settings.logo||"SF";$("settingHeroTitle").value=settings.heroTitle||"SF-Gallery";$("settingHeroText").value=settings.heroText||"আপনার পছন্দের স্মার্টফোন খুঁজে নিন।";$("settingColor").value=settings.color||"#1769d2";}}
-onAuthStateChanged(auth,user=>{isAdmin=!!user&&user.uid===ADMIN_UID;$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(user&&!isAdmin){signOut(auth);$("loginMessage").textContent="এই Account-এর Admin অনুমতি নেই।";}if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
+onAuthStateChanged(auth,user=>{
+ isAdmin=!!user&&user.uid===ADMIN_UID;
+ customerUser=user&&!isAdmin?user:null;
+ if($("accountButton"))$("accountButton").textContent=customerUser?"My Account":"Login";
+ if(customerUser){$("customerWelcome").textContent="স্বাগতম, "+(user.displayName||"Customer");$("customerEmailView").textContent=user.email||"";}
+ if(!customerUser&&!isAdmin&&$("homePage").style.display==="block")showPage("auth");$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(user&&!isAdmin){signOut(auth);$("loginMessage").textContent="এই Account-এর Admin অনুমতি নেই।";}if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
+window.setAuthMode=mode=>{
+ authMode=mode;$("registerFields").classList.toggle("hidden",mode!=="register");
+ $("authSubmit").textContent=mode==="login"?"Login":"Create Account";
+ $("loginTab").className=mode==="login"?"":"secondary";
+ $("registerTab").className=mode==="register"?"":"secondary";
+ $("authMessage").textContent="";
+};
+window.submitCustomerAuth=async()=>{
+ const email=$("customerEmail").value.trim(),password=$("customerPassword").value;
+ $("authMessage").textContent="অপেক্ষা করুন...";
+ try{
+  if(!email||!password)throw new Error("Email ও Password লিখুন।");
+  if(authMode==="register"){
+   const name=$("customerName").value.trim(),phone=$("customerPhone").value.trim();
+   if(!name||!phone)throw new Error("নাম ও মোবাইল নম্বর দিন।");
+   if(!/^\\+?[0-9]{10,15}$/.test(phone.replace(/[\\s-]/g,"")))throw new Error("সঠিক মোবাইল নম্বর দিন।");
+   if(password.length<6)throw new Error("Password কমপক্ষে ৬ অক্ষরের হতে হবে।");
+   const cred=await createUserWithEmailAndPassword(auth,email,password);
+   await updateProfile(cred.user,{displayName:name});
+  }else{await signInWithEmailAndPassword(auth,email,password);}
+  customerUser=auth.currentUser;$("authMessage").textContent="সফল হয়েছে!";showPage("home");
+ }catch(e){$("authMessage").textContent=e.message||"সমস্যা হয়েছে। আবার চেষ্টা করুন।";}
+};
+window.customerLogout=async()=>{await signOut(auth);customerUser=null;showPage("auth");};
 window.loginAdmin=async()=>{try{await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);$("loginMessage").textContent="";}catch(e){$("loginMessage").textContent="Login হয়নি: Email অথবা Password পরীক্ষা করো।";}};
 window.logoutAdmin=async()=>{await signOut(auth);$("adminPassword").value="";};
 window.clearProductForm=()=>{["editId","pName","pRam","pStorage","pPrice","pOffer","pImage","pDescription"].forEach(id=>$(id).value="");$("pImageFile").value="";$("imageUploadMessage").textContent="";$("pBrand").value="Samsung";$("pStock").value="Available";$("productMessage").textContent="";};
@@ -125,6 +168,7 @@ window.deleteProduct=async id=>{if(!isAdmin)return;if(confirm("এই Product �
 function renderAdminList(){if(!$("adminProductList")||!isAdmin)return;const entries=Object.entries(products);$("adminProductList").innerHTML=entries.length?entries.map(([id,p])=>'<div class="adminitem"><div><b>'+safe(p.brand)+' '+safe(p.name)+'</b><small>৳'+safe(p.price)+' · '+safe(p.stock)+'</small></div><div class="actions"><button class="secondary" onclick="editProduct(\''+id+'\')">Edit</button><button class="danger" onclick="deleteProduct(\''+id+'\')">Delete</button></div></div>').join(""):'<p class="muted">এখনো কোনো Product নেই।</p>';}
 window.saveSettings=async()=>{if(!isAdmin)return;const data={title:$("settingTitle").value.trim()||"SF-Gallery",logo:$("settingLogo").value.trim()||"SF",heroTitle:$("settingHeroTitle").value.trim()||"SF-Gallery",heroText:$("settingHeroText").value.trim(),color:$("settingColor").value};try{await set(ref(db,"siteSettings"),data);$("settingsMessage").textContent="Customize save হয়েছে!";}catch(e){$("settingsMessage").textContent="Save হয়নি: "+e.message;}};
 renderProducts();
+setAuthMode("login");
 </script>
 <script>
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.error));}
