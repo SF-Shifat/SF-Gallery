@@ -181,6 +181,8 @@ body{padding-bottom:0}
 .dashboard-pending-row button{margin-top:6px;padding:6px 10px;font-size:11px}
 
 @media(min-width:650px){.dashboard-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.dashboard-card{padding:16px}.dashboard-card strong{font-size:28px}}
+
+.phone-source-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.phone-source-links a{display:inline-block;background:#fff0e8;color:#d94800;border:1px solid #ffd2bd;padding:9px 11px;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700}.phone-research-form{background:#fffaf7;border:1px solid #ffe0d0;border-radius:8px;padding:12px;margin:12px 0}.phone-research-form .formgrid{gap:8px}.phone-pending{border:1px solid #ffd9c7;background:#fffaf7;border-radius:8px;padding:11px;margin:9px 0;font-size:12px;line-height:1.6}.phone-pending small{display:block;color:#777;overflow-wrap:anywhere}
 </style>
 <script>document.documentElement.classList.toggle("admin-route",new URLSearchParams(location.search).get("admin")==="1");</script>
 </head>
@@ -235,7 +237,20 @@ body{padding-bottom:0}
  <div class="dashboard-panel"><div class="sectionhead"><b>⏳ Pending অর্ডার</b><span id="dashPendingCount" class="muted">0টি</span></div><div id="dashPendingOrders"></div></div>
  <div class="dashboard-panel"><b>সাম্প্রতিক ৫টি অর্ডার</b><div id="dashRecentOrders"></div></div>
 </div>
-<div class="sectionhead"><h2>পণ্য Add / Edit</h2></div>
+<div class="dashboard-panel" id="phoneResearchPanel">
+<b>📱 নতুন ফোন খুঁজুন (Free)</b>
+<p class="muted">ফ্রি সোর্সে Latest phone, বাংলাদেশি দাম ও স্পেসিফিকেশন দেখে তথ্য ফর্মে দিন। Pending থাকবে; Approve না করা পর্যন্ত Customer-রা দেখতে পাবে না।</p>
+<div class="phone-source-links"><a href="https://www.mobilebazar24.com/" target="_blank" rel="noopener">MobileBazar · BD দাম ও Latest</a><a href="https://specs.bd/" target="_blank" rel="noopener">specs.bd · Specs ও Official price</a><a href="https://www.gsmarena.com/" target="_blank" rel="noopener">GSMArena · Specs যাচাই</a></div>
+<div class="phone-research-form"><div class="formgrid">
+<div><label>Brand</label><select id="discoverBrand"><option>Samsung</option><option>Xiaomi</option><option>Realme</option><option>Vivo</option><option>OPPO</option><option>Apple</option><option>Infinix</option><option>Tecno</option><option>OnePlus</option><option>Google</option><option>Motorola</option><option>Honor</option><option>Nothing</option><option>Other</option></select></div>
+<div><label>Model</label><input id="discoverName" placeholder="যেমন Galaxy A57"></div>
+<div><label>RAM</label><input id="discoverRam" placeholder="8GB"></div><div><label>Storage</label><input id="discoverStorage" placeholder="256GB"></div>
+<div><label>বাংলাদেশি দাম (৳)</label><input id="discoverPrice" type="number" min="1" placeholder="যাচাই করা দাম"></div><div><label>ছবির URL (ঐচ্ছিক)</label><input id="discoverImage" type="url" placeholder="https://..."></div>
+</div><label>মূল স্পেসিফিকেশন</label><textarea id="discoverSpecs" placeholder="Display, Processor, Camera, Battery, Charging, 5G ইত্যাদি"></textarea>
+<label>দামের/তথ্যের সোর্স লিংক</label><input id="discoverSource" type="url" placeholder="যে পেজ থেকে তথ্য নিয়েছেন">
+<button style="width:100%;margin-top:10px" onclick="saveDiscoveredPhone()">Pending হিসেবে জমা দিন</button><p id="discoverMessage" class="muted"></p></div>
+<b>⏳ Approve করার অপেক্ষায়</b><div id="discoveredPhoneQueue"><p class="muted">এখনো কোনো ফোন নেই।</p></div>
+<p class="muted">এই ফ্রি সংস্করণে সোর্স থেকে তথ্য Admin নিজে যাচাই করে ফর্মে দেবেন; সাইট নিজে বাইরের সাইট scrape করে না। সোর্স ও যাচাইয়ের তারিখ সংরক্ষণ হবে।</p></div><div class="sectionhead"><h2>পণ্য Add / Edit</h2></div>
 <input id="editId" type="hidden">
 <div class="formgrid">
 <div><label>Brand</label><select id="pBrand"><option>Samsung</option><option>Xiaomi</option><option>Realme</option><option>Vivo</option><option>OPPO</option></select></div>
@@ -303,7 +318,7 @@ window.renderProducts=renderProducts;
 function renderProducts(){
  const q=$("searchBox").value.trim().toLowerCase(),brands=["All","Samsung","Xiaomi","Realme","Vivo","OPPO"];
  $("brandFilters").innerHTML=brands.map(b=>'<button class="'+(activeBrand===b?'active':'')+'" onclick="setBrand(\''+b+'\')">'+b+'</button>').join("");
- const list=Object.entries(products).filter(([id,p])=>(activeBrand==="All"||p.brand===activeBrand)&&((p.name||"").toLowerCase().includes(q)||(p.brand||"").toLowerCase().includes(q)));
+ const list=Object.entries(products).filter(([id,p])=>p.status!=="Pending Approval"&&(activeBrand==="All"||p.brand===activeBrand)&&((p.name||"").toLowerCase().includes(q)||(p.brand||"").toLowerCase().includes(q)));
  $("productCount").textContent=list.length+" Products";
  $("productGrid").innerHTML=list.length?list.map(([id,p])=>'<article class="product" data-product-id="'+safe(id)+'" role="button" tabindex="0">'+(p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" onerror="this.style.display=\'none\'">':'<div style="height:145px;display:grid;place-items:center;font-size:42px">📱</div>')+'<div class="info"><h3>'+safe(p.brand)+" "+safe(p.name)+'</h3><div class="muted">'+safe(p.ram)+' / '+safe(p.storage)+'</div><div class="price">'+(p.offer?'<s class="muted">৳'+safe(p.price)+'</s> ৳'+safe(p.offer):'৳'+safe(p.price))+'</div><div class="stock '+(p.stock==="Out of Stock"?"out":"")+'">'+safe(p.stock||"Available")+'</div>'+(p.description?'<p class="muted">'+safe(p.description)+'</p>':'')+'</div><button data-add-cart="'+safe(id)+'" style="width:calc(100% - 22px);margin:0 11px 12px">Add to Cart</button></article>').join(""):'<div class="empty" style="grid-column:1/-1">এখনো কোনো ফোন যোগ করা হয়নি।</div>';
 }
@@ -366,7 +381,30 @@ window.uploadProductImage=async()=>{
 window.saveProduct=async()=>{if(!isAdmin)return alert("Admin login required");const name=$("pName").value.trim(),price=Number($("pPrice").value);if(!name||!price||price<0){$("productMessage").textContent="Model Name ও সঠিক Price দাও।";return;}const data={brand:$("pBrand").value,name,ram:$("pRam").value.trim(),storage:$("pStorage").value.trim(),price,offer:Number($("pOffer").value)||0,stock:$("pStock").value,image:$("pImage").value.trim(),description:$("pDescription").value.trim(),updatedAt:Date.now()};try{const id=$("editId").value||push(ref(db,"products")).key;await set(ref(db,"products/"+id),data);$("productMessage").textContent="Product save হয়েছে!";clearProductForm();}catch(e){$("productMessage").textContent="Save হয়নি: "+e.message;}};
 window.editProduct=id=>{const p=products[id];if(!p||!isAdmin)return;$("editId").value=id;$("pBrand").value=p.brand||"Samsung";$("pName").value=p.name||"";$("pRam").value=p.ram||"";$("pStorage").value=p.storage||"";$("pPrice").value=p.price||"";$("pOffer").value=p.offer||"";$("pStock").value=p.stock||"Available";$("pImage").value=p.image||"";$("pDescription").value=p.description||"";window.scrollTo(0,0);};
 window.deleteProduct=async id=>{if(!isAdmin)return;if(confirm("এই Product মুছে ফেলবে?")){try{await remove(ref(db,"products/"+id));$("productMessage").textContent="Product delete হয়েছে।";}catch(e){alert("Delete হয়নি: "+e.message);}}};
-function renderAdminList(){if(!$("adminProductList")||!isAdmin)return;const entries=Object.entries(products);$("adminProductList").innerHTML=entries.length?entries.map(([id,p])=>'<div class="adminitem"><div><b>'+safe(p.brand)+' '+safe(p.name)+'</b><small>৳'+safe(p.price)+' · '+safe(p.stock)+'</small></div><div class="actions"><button class="secondary" onclick="editProduct(\''+id+'\')">Edit</button><button class="danger" onclick="deleteProduct(\''+id+'\')">Delete</button></div></div>').join(""):'<p class="muted">এখনো কোনো Product নেই।</p>';}
+function renderAdminList(){if(!$("adminProductList")||!isAdmin)return;const entries=Object.entries(products);$("adminProductList").innerHTML=entries.length?entries.map(([id,p])=>'<div class="adminitem"><div><b>'+safe(p.brand)+' '+safe(p.name)+'</b><small>৳'+safe(p.price)+' · '+safe(p.stock)+' · '+safe(p.status||"Published")+'</small></div><div class="actions">'+(p.status==="Pending Approval"?'<button onclick="approveDiscoveredPhone(\''+id+'\')">Approve</button>':'')+'<button class="secondary" onclick="editProduct(\''+id+'\')">Edit</button><button class="danger" onclick="deleteProduct(\''+id+'\')">Delete</button></div></div>').join(''):'<p class="muted">এখনো কোনো Product নেই।</p>';renderDiscoveredPhoneQueue();}
+
+window.saveDiscoveredPhone=async()=>{
+ if(!isAdmin)return alert("Admin login required");
+ const brand=$("discoverBrand").value,name=$("discoverName").value.trim(),price=Number($("discoverPrice").value),source=$("discoverSource").value.trim();
+ if(!name||!price||price<=0||!source){$("discoverMessage").textContent="Model, যাচাই করা দাম এবং সোর্স লিংক দিতে হবে।";return;}
+ const specs=$("discoverSpecs").value.trim(),ram=$("discoverRam").value.trim(),storage=$("discoverStorage").value.trim();
+ const duplicate=Object.entries(products).some(([id,p])=>(p.brand||"").toLowerCase()===brand.toLowerCase()&&(p.name||"").toLowerCase()===name.toLowerCase());
+ if(duplicate){$("discoverMessage").textContent="এই Brand ও Model আগে থেকেই ক্যাটালগে আছে।";return;}
+ const data={brand,name,ram,storage,price,offer:0,stock:"Available",image:$("discoverImage").value.trim(),description:specs,sourceUrl:source,sourceCheckedAt:Date.now(),status:"Pending Approval",createdAt:Date.now(),updatedAt:Date.now()};
+ try{const id=push(ref(db,"products")).key;await set(ref(db,"products/"+id),data);$("discoverMessage").textContent="ফোন Pending তালিকায় যোগ হয়েছে। Approve করলে Customer Website-এ দেখা যাবে।";["discoverName","discoverRam","discoverStorage","discoverPrice","discoverImage","discoverSpecs","discoverSource"].forEach(k=>$(k).value="");}
+ catch(e){$("discoverMessage").textContent="যোগ হয়নি: "+e.message;}
+};
+window.approveDiscoveredPhone=async id=>{
+ if(!isAdmin)return;const p=products[id];if(!p||p.status!=="Pending Approval")return;
+ if(!p.price||!p.sourceUrl)return alert("দাম ও সোর্স লিংক যাচাই করুন।");
+ try{await update(ref(db,"products/"+id),{status:"Available",approvedAt:Date.now(),updatedAt:Date.now()});}
+ catch(e){alert("Approve হয়নি: "+e.message);}
+};
+function renderDiscoveredPhoneQueue(){
+ const el=$("discoveredPhoneQueue");if(!el||!isAdmin)return;
+ const entries=Object.entries(products||{}).filter(([id,p])=>p.status==="Pending Approval").sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
+ el.innerHTML=entries.length?entries.map(([id,p])=>'<div class="phone-pending"><b>'+safe(p.brand)+' '+safe(p.name)+'</b><br>৳'+Number(p.price||0).toLocaleString("en-IN")+' · '+safe(p.ram||"RAM নেই")+' / '+safe(p.storage||"Storage নেই")+'<small>'+safe(p.description||"Specs যোগ করা হয়নি")+'</small><small>সোর্স যাচাই: '+new Date(p.sourceCheckedAt||p.createdAt||Date.now()).toLocaleString("bn-BD")+'</small><small><a href="'+safe(p.sourceUrl||"#")+'" target="_blank" rel="noopener">সোর্স খুলুন</a></small><button onclick="approveDiscoveredPhone(\''+id+'\')">Approve করে প্রকাশ করুন</button></div>').join(''):'<p class="muted">এখনো কোনো Pending ফোন নেই।</p>';
+}
 window.saveSettings=async()=>{if(!isAdmin)return;const data={...settings,title:$("settingTitle").value.trim()||"SF-Gallery",logo:$("settingLogo").value.trim()||"SF",heroTitle:$("settingHeroTitle").value.trim()||"SF-Gallery",heroText:$("settingHeroText").value.trim(),color:$("settingColor").value,deliveryInsideFee:Math.max(0,Number($("deliveryInsideFee").value)||0),deliveryOutsideFee:Math.max(0,Number($("deliveryOutsideFee").value)||0),bkashNumber:$("bkashNumber").value.trim(),nagadNumber:$("nagadNumber").value.trim(),rocketNumber:$("rocketNumber").value.trim(),upayNumber:$("upayNumber").value.trim()};try{await set(ref(db,"siteSettings"),data);$("settingsMessage").textContent="Customize save হয়েছে!";}catch(e){$("settingsMessage").textContent="Save হয়নি: "+e.message;}};
 
 function saveCart(){localStorage.setItem("sfGalleryCart",JSON.stringify(cart));renderCart();}
