@@ -168,6 +168,7 @@ body{padding-bottom:0}
 <div id="registerFields" class="hidden"><label>আপনার নাম</label><input id="customerName" autocomplete="name" placeholder="পুরো নাম"><label>মোবাইল নম্বর</label><input id="customerPhone" type="tel" autocomplete="tel" placeholder="01XXXXXXXXX"></div>
 <label>Email</label><input id="customerEmail" type="email" autocomplete="email" placeholder="আপনার ইমেইল">
 <label>Password</label><input id="customerPassword" type="password" autocomplete="current-password" placeholder="কমপক্ষে ৬ অক্ষর">
+<button type="button" class="secondary" style="margin:5px 0 10px;padding:7px 12px" onclick="togglePasswordVisibility('customerPassword',this)">👁️ Password দেখুন</button>
 <div class="actions"><button id="authSubmit" onclick="submitCustomerAuth()">Login</button><button class="secondary" onclick="showPage('home')">Back</button></div><p id="authMessage" class="muted"></p>
 </div></section>
 <section class="page" id="cartPage"><h2>আমার Cart</h2><div id="cartItems"></div><div id="cartTotals"></div><div class="actions"><button onclick="goToCheckout()">Checkout</button><button class="secondary" onclick="showPage('home')">আরও পণ্য কিনুন</button></div><p id="cartMessage" class="muted"></p></section>
@@ -186,6 +187,7 @@ body{padding-bottom:0}
 <p class="muted">শুধু অনুমোদিত Admin Login করতে পারবেন।</p>
 <label>Email</label><input id="adminEmail" type="email" placeholder="Admin email">
 <label>Password</label><input id="adminPassword" type="password" placeholder="Password">
+<button type="button" class="secondary" style="margin:5px 0 10px;padding:7px 12px" onclick="togglePasswordVisibility('adminPassword',this)">👁️ Password দেখুন</button>
 <div class="actions"><button onclick="loginAdmin()">Login</button><button class="secondary" onclick="showPage('home')">Back</button></div>
 <p id="loginMessage" class="muted"></p>
 </div>
@@ -273,6 +275,7 @@ onAuthStateChanged(auth,user=>{
  if($("accountButton"))$("accountButton").textContent=customerUser?"My Account":"Login";updateBottomNav();
  if(customerUser){$("customerWelcome").textContent="স্বাগতম, "+(user.displayName||"Customer");$("customerEmailView").textContent=user.email||"";onValue(ref(db,"customers/"+user.uid),s=>{const profile=s.val()||{};if(profile.name)$("customerWelcome").textContent="স্বাগতম, "+profile.name;});onValue(ref(db,"orders/"+user.uid),s=>{customerOrders=s.val()||{};renderCustomerOrders();});}else{customerOrders={};renderCustomerOrders();}if(isAdmin){onValue(ref(db,"orders"),s=>{allOrders=s.val()||{};renderAdminOrders();});}
  if(!isAdmin&&!isAdminRoute)showPage(customerUser?"home":"auth");$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
+window.togglePasswordVisibility=(id,button)=>{const field=$(id);if(!field)return;const showing=field.type==="password";field.type=showing?"text":"password";button.textContent=showing?"🙈 Password লুকান":"👁️ Password দেখুন";};
 window.setAuthMode=mode=>{
  authMode=mode;$("registerFields").classList.toggle("hidden",mode!=="register");
  $("authSubmit").textContent=mode==="login"?"Login":"Create Account";
