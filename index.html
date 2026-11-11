@@ -342,10 +342,10 @@ body{padding-bottom:0}
 <footer class="shop-bottom-nav"><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="document.getElementById('brandFilters').scrollIntoView({behavior:'smooth',block:'center'})"><span>▦</span>Category</button><button id="cartNavButton" onclick="showPage('cart')"><span class="nav-icon-wrap">🛒<b id="cartNavCount" class="nav-count" style="display:none">0</b></span>Cart</button><button id="accountNavButton" onclick="showPage('account')"><span>👤</span>Account</button></footer>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import { getDatabase, ref, onValue, push, set, update, remove } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
 const firebaseConfig={apiKey:"AIzaSyCFpaSBdmR_wWm0j426JxR6WUy_QeBnmo8",authDomain:"sf-gallery-ec41d.firebaseapp.com",databaseURL:"https://sf-gallery-ec41d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"sf-gallery-ec41d",storageBucket:"sf-gallery-ec41d.firebasestorage.app",messagingSenderId:"671129281461",appId:"1:671129281461:web:15e3016202dff3e0622ffc"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);\nconst authPersistenceReady=setPersistence(auth,browserLocalPersistence);
 const ADMIN_UID="aDD6jv8lJsQMZB186oPBy0TC1Hy1";
 const isAdminRoute=new URLSearchParams(location.search).get("admin")==="1";
 let products={},settings={},activeBrand="All",isAdmin=false,customerUser=null,authMode="login",customerOrders={},allOrders={},cart={},couponDiscount=0,currentReviewProductId=null,allReturns={},allChats={};
@@ -417,7 +417,7 @@ window.submitCustomerAuth=async()=>{
  }catch(e){$("authMessage").textContent=e.message||"সমস্যা হয়েছে। আবার চেষ্টা করুন।";}
 };
 window.customerLogout=async()=>{await signOut(auth);customerUser=null;showPage("auth");};
-window.loginAdmin=async()=>{try{await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);$("loginMessage").textContent="";}catch(e){$("loginMessage").textContent="Login হয়নি: Email অথবা Password পরীক্ষা করো।";}};
+window.loginAdmin=async()=>{try{await authPersistenceReady;await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);$("loginMessage").textContent="";}catch(e){$("loginMessage").textContent="Login হয়নি: Email অথবা Password পরীক্ষা করো।";}};
 window.logoutAdmin=async()=>{await signOut(auth);$("adminPassword").value="";};
 window.clearProductForm=()=>{["editId","pName","pRam","pStorage","pPrice","pOffer","pImage","pDescription"].forEach(id=>$(id).value="");$("pImageFile").value="";$("imageUploadMessage").textContent="";$("pBrand").value="Samsung";$("pStock").value="Available";$("pStockQty").value=10;$("productMessage").textContent="";};
 window.uploadProductImage=async()=>{
