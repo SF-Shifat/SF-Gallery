@@ -11,7 +11,7 @@
 </style>
 </head>
 <body>
-<header><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div><button class="headerbtn" onclick="showPage('admin')">Admin</button></header>
+<header><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div><button class="headerbtn secondary" id="accountButton" onclick="showPage('account')">Login</button><button class="headerbtn" onclick="showPage('admin')">Admin</button></header>
 <main>
 <section class="page" id="authPage"><div class="authwrap">
 <h2>Customer Account</h2><p class="muted">Email ও Password দিয়ে Login অথবা নতুন Account তৈরি করুন।</p>
@@ -118,7 +118,7 @@ onAuthStateChanged(auth,user=>{
  customerUser=user&&!isAdmin?user:null;
  if($("accountButton"))$("accountButton").textContent=customerUser?"My Account":"Login";
  if(customerUser){$("customerWelcome").textContent="স্বাগতম, "+(user.displayName||"Customer");$("customerEmailView").textContent=user.email||"";}
- if(!customerUser&&!isAdmin&&$("homePage").style.display==="block")showPage("auth");$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(user&&!isAdmin){signOut(auth);$("loginMessage").textContent="এই Account-এর Admin অনুমতি নেই।";}if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
+ if(!isAdmin)showPage(customerUser?"home":"auth");$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
 window.setAuthMode=mode=>{
  authMode=mode;$("registerFields").classList.toggle("hidden",mode!=="register");
  $("authSubmit").textContent=mode==="login"?"Login":"Create Account";
