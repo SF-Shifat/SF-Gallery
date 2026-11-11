@@ -117,7 +117,7 @@ onAuthStateChanged(auth,user=>{
  isAdmin=!!user&&user.uid===ADMIN_UID;
  customerUser=user&&!isAdmin?user:null;
  if($("accountButton"))$("accountButton").textContent=customerUser?"My Account":"Login";
- if(customerUser){$("customerWelcome").textContent="স্বাগতম, "+(user.displayName||"Customer");$("customerEmailView").textContent=user.email||"";}
+ if(customerUser){$("customerWelcome").textContent="স্বাগতম, "+(user.displayName||"Customer");$("customerEmailView").textContent=user.email||"";onValue(ref(db,"customers/"+user.uid),s=>{const profile=s.val()||{};if(profile.name)$("customerWelcome").textContent="স্বাগতম, "+profile.name;});onValue(ref(db,"orders/"+user.uid),s=>{customerOrders=s.val()||{};renderCustomerOrders();});}else{customerOrders={};renderCustomerOrders();}if(isAdmin){onValue(ref(db,"orders"),s=>{allOrders=s.val()||{};renderAdminOrders();});}
  if(!isAdmin)showPage(customerUser?"home":"auth");$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
 window.setAuthMode=mode=>{
  authMode=mode;$("registerFields").classList.toggle("hidden",mode!=="register");
