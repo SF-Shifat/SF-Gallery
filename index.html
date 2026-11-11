@@ -3,79 +3,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1769d2">
 <link rel="manifest" href="./manifest.json">
- <meta name="theme-color" content="#1769d2">
 <title>SF-Gallery</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{
- font-family:Arial,sans-serif;
- background:#f5f8ff;
- color:#172b4d;
-}
-header{
- background:#fff;
- padding:18px 20px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- box-shadow:0 2px 12px #dce6f5;
-}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-icon{
- background:#1769d2;color:white;
- padding:12px;border-radius:12px;
- font-weight:bold;font-size:20px;
-}
-.logo h2{color:#1769d2;font-size:21px}
-.menu{font-size:25px;color:#1769d2}
-main{padding:22px 18px 100px}
-.welcome{
- background:linear-gradient(135deg,#1769d2,#48a0f5);
- color:white;padding:30px 22px;
- border-radius:22px;margin-top:12px;
- box-shadow:0 8px 25px #1769d244;
-}
-.welcome small{opacity:.85;letter-spacing:2px}
-.welcome h1{font-size:29px;margin:15px 0 10px}
-.welcome p{font-size:14px;line-height:1.7}
-.welcome button{
- margin-top:22px;background:white;
- color:#1769d2;border:0;border-radius:10px;
- padding:12px 22px;font-weight:bold;
-}
-.section-title{margin:30px 0 15px;font-size:19px}
-.grid{
- display:grid;grid-template-columns:1fr 1fr;
- gap:14px;
-}
-.item{
- background:white;padding:22px 12px;
- border-radius:17px;text-align:center;
- box-shadow:0 4px 15px #dce6f5;
-}
+body{font-family:Arial,sans-serif;background:#f5f8ff;color:#172b4d}
+header{background:white;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px #dce6f5}
+.logo{display:flex;align-items:center;gap:10px;color:#1769d2}
+.logo-icon{background:#1769d2;color:white;padding:10px;border-radius:12px;font-weight:bold}
+.menu{font-size:25px;color:#1769d2;border:0;background:none;cursor:pointer}
+#menuBox{display:none;background:white;padding:15px;box-shadow:0 3px 10px #ddd}
+#menuBox a{display:block;padding:10px;color:#1769d2;text-decoration:none}
+main{padding:20px 18px 100px}
+.welcome{background:linear-gradient(135deg,#1769d2,#48a0f5);color:white;padding:30px 22px;border-radius:22px;margin-top:12px}
+.welcome h1{font-size:29px;margin:15px 0}
+.welcome p{line-height:1.7}
+button{cursor:pointer}
+.explore{margin-top:20px;background:white;color:#1769d2;border:0;border-radius:10px;padding:12px 22px;font-weight:bold}
+.section-title{margin:30px 0 15px;font-size:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.item{background:white;padding:22px 12px;border-radius:17px;text-align:center;box-shadow:0 4px 15px #dce6f5;border:0;width:100%;color:#172b4d}
 .item .icon{font-size:30px;margin-bottom:10px}
 .item h3{font-size:15px;margin-bottom:6px}
 .item p{font-size:12px;color:#8493a8}
-.about{
- background:white;padding:20px;
- border-radius:17px;margin-top:20px;
- line-height:1.8;color:#687991;
- box-shadow:0 4px 15px #dce6f5;
-}
-.about h3{color:#1769d2;margin-bottom:8px}
-footer{
- position:fixed;bottom:0;left:0;right:0;
- background:white;display:flex;
- justify-content:space-around;
- padding:14px 5px;
- box-shadow:0 -3px 15px #dce6f5;
-}
-footer a{
- text-decoration:none;color:#1769d2;
- font-size:12px;text-align:center;
-}
+.page{display:none;background:white;padding:22px;border-radius:17px;margin-top:20px;line-height:1.8;box-shadow:0 4px 15px #dce6f5}
+.page h2{color:#1769d2;margin-bottom:12px}
+.page button{background:#1769d2;color:white;border:0;padding:10px 18px;border-radius:8px;margin-top:15px}
+.page input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccd8e8;border-radius:8px}
+footer{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:12px 5px;box-shadow:0 -3px 15px #dce6f5}
+footer button{border:0;background:none;color:#1769d2;font-size:12px}
 footer span{display:block;font-size:21px;margin-bottom:4px}
 </style>
 </head>
@@ -86,70 +44,108 @@ footer span{display:block;font-size:21px;margin-bottom:4px}
   <div class="logo-icon">SF</div>
   <h2>SF-Gallery</h2>
  </div>
- <div class="menu">☰</div>
+ <button class="menu" onclick="toggleMenu()">☰</button>
 </header>
 
+<div id="menuBox">
+ <a href="#" onclick="showPage('home')">Home</a>
+ <a href="#" onclick="showPage('profile')">My Profile</a>
+ <a href="#" onclick="showPage('settings')">Settings</a>
+ <a href="#" onclick="showPage('about')">About Us</a>
+ <a href="#" onclick="showPage('contact')">Contact</a>
+</div>
+
 <main>
- <section class="welcome">
+<section id="home">
+ <div class="welcome">
   <small>WELCOME TO</small>
   <h1>SF-Gallery</h1>
-  <p>Your Digital Experience Starts Here.
+  <p>Your Digital Experience Starts Here.<br>
   Discover a modern, simple and beautiful experience.</p>
-  <button onclick="document.querySelector('.section-title').scrollIntoView({behavior:'smooth'})">
-   Explore Now →
-  </button>
- </section>
-
- <h2 class="section-title">Explore More</h2>
-
- <div class="grid">
-  <div class="item">
-   <div class="icon">👤</div>
-   <h3>My Profile</h3>
-   <p>Your personal space</p>
-  </div>
-  <div class="item">
-   <div class="icon">⚙️</div>
-   <h3>Settings</h3>
-   <p>Manage preferences</p>
-  </div>
-  <div class="item">
-   <div class="icon">ℹ️</div>
-   <h3>About Us</h3>
-   <p>Know about SF-Gallery</p>
-  </div>
-  <div class="item">
-   <div class="icon">☎️</div>
-   <h3>Contact</h3>
-   <p>Get in touch with us</p>
-  </div>
+  <button class="explore" onclick="document.getElementById('explore').scrollIntoView({behavior:'smooth'})">Explore Now →</button>
  </div>
 
- <section class="about">
-  <h3>About SF-Gallery</h3>
-  <p>Welcome to SF-Gallery. We are building a
-  modern digital platform with a clean design
-  and a better user experience.</p>
+ <h2 class="section-title" id="explore">Explore More</h2>
+ <div class="grid">
+  <button class="item" onclick="showPage('profile')"><div class="icon">👤</div><h3>My Profile</h3><p>Your personal space</p></button>
+  <button class="item" onclick="showPage('settings')"><div class="icon">⚙️</div><h3>Settings</h3><p>Manage preferences</p></button>
+  <button class="item" onclick="showPage('about')"><div class="icon">ℹ️</div><h3>About Us</h3><p>Know about SF-Gallery</p></button>
+  <button class="item" onclick="showPage('contact')"><div class="icon">☎️</div><h3>Contact</h3><p>Get in touch with us</p></button>
+ </div>
+ <section class="page" style="display:block">
+  <h2>About SF-Gallery</h2>
+  <p>Welcome to SF-Gallery. Your destination for mobile phones and accessories.</p>
  </section>
+</section>
+
+<section class="page" id="profile">
+ <h2>My Profile</h2>
+ <p>Your personal information</p>
+ <input id="profileName" placeholder="Your Name">
+ <input id="profilePhone" placeholder="Phone Number">
+ <button onclick="saveProfile()">Save Profile</button>
+ <p id="profileMessage"></p>
+ <button onclick="showPage('home')">Back Home</button>
+</section>
+
+<section class="page" id="settings">
+ <h2>Settings</h2>
+ <p>SF-Gallery App Settings</p>
+ <button onclick="alert('SF-Gallery Version 1.0')">App Version</button>
+ <button onclick="showPage('home')">Back Home</button>
+</section>
+
+<section class="page" id="about">
+ <h2>About Us</h2>
+ <p>SF-Gallery is a mobile phone and accessories shopping platform. We aim to provide a simple shopping experience.</p>
+ <button onclick="showPage('home')">Back Home</button>
+</section>
+
+<section class="page" id="contact">
+ <h2>Contact Us</h2>
+ <p>Contact SF-Gallery for assistance.</p>
+ <input id="contactName" placeholder="Your Name">
+ <input id="contactMessage" placeholder="Your Message">
+ <button onclick="sendMessage()">Send Message</button>
+ <button onclick="showPage('home')">Back Home</button>
+</section>
 </main>
 
 <footer>
- <a href="#"><span>🏠</span>Home</a>
- <a href="#about"><span>ℹ️</span>About</a>
- <a href="#profile"><span>👤</span>Profile</a>
- <a href="#settings"><span>⚙️</span>Settings</a>
+ <button onclick="showPage('home')"><span>🏠</span>Home</button>
+ <button onclick="showPage('about')"><span>ℹ️</span>About</button>
+ <button onclick="showPage('profile')"><span>👤</span>Profile</button>
+ <button onclick="showPage('settings')"><span>⚙️</span>Settings</button>
 </footer>
 
- 
 <script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("SF-Gallery Offline Ready"))
-      .catch(error => console.log(error));
-  });
+function showPage(id){
+ document.querySelectorAll('main > section').forEach(s=>s.style.display='none');
+ const page=document.getElementById(id);
+ if(page) page.style.display='block';
+ document.getElementById('menuBox').style.display='none';
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleMenu(){
+ const m=document.getElementById('menuBox');
+ m.style.display=m.style.display==='block'?'none':'block';
+}
+function saveProfile(){
+ localStorage.setItem('sfName',document.getElementById('profileName').value);
+ localStorage.setItem('sfPhone',document.getElementById('profilePhone').value);
+ document.getElementById('profileMessage').textContent='Profile saved on this device!';
+}
+function sendMessage(){
+ const n=document.getElementById('contactName').value;
+ const m=document.getElementById('contactMessage').value;
+ if(!n||!m){alert('Please enter your name and message');return;}
+ alert('Message form ready. Online message delivery will be connected later.');
+}
+if('serviceWorker' in navigator){
+ window.addEventListener('load',()=>{
+  navigator.serviceWorker.register('./sw.js').catch(console.error);
+ });
 }
 </script>
-
 </body>
 </html>
