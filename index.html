@@ -156,6 +156,23 @@ body{padding-bottom:0}
  .catalog-panel .product h3{font-size:14px}
 }
 
+
+/* Admin overview dashboard */
+.admin-dashboard{margin:14px 0 22px}
+.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.dashboard-card{background:#fff7f2;border:1px solid #ffe0d0;border-radius:9px;padding:13px;min-width:0}
+.dashboard-card small,.dashboard-card span{display:block;color:#777;font-size:11px}
+.dashboard-card strong{display:block;color:#e94d00;font-size:24px;line-height:1.35;margin:5px 0;overflow-wrap:anywhere}
+.dashboard-card.sales{background:#fff0e8}
+.dashboard-panel{background:#fff;border:1px solid #eee;border-radius:9px;padding:13px;margin-top:11px}
+.sales-chart{height:130px;display:flex;align-items:flex-end;gap:8px;padding:12px 2px 0}
+.sales-day{flex:1;min-width:0;text-align:center;font-size:10px;color:#777}
+.sales-bar-wrap{height:88px;display:flex;align-items:flex-end;justify-content:center}
+.sales-bar{width:min(28px,75%);min-height:3px;background:linear-gradient(180deg,#ff9a52,#f85606);border-radius:5px 5px 0 0}
+.sales-day b{display:block;font-size:9px;color:#555;overflow:hidden;text-overflow:ellipsis}
+.dashboard-order{padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:12px;line-height:1.55}
+.dashboard-order:last-child{border-bottom:0}
+@media(min-width:650px){.dashboard-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.dashboard-card{padding:16px}.dashboard-card strong{font-size:28px}}
 </style>
 <script>document.documentElement.classList.toggle("admin-route",new URLSearchParams(location.search).get("admin")==="1");</script>
 </head>
@@ -194,6 +211,19 @@ body{padding-bottom:0}
 </div>
 <div id="adminTools" class="hidden">
 <p id="adminWelcome" class="muted">Admin হিসেবে Login করা হয়েছে।</p>
+<div class="admin-dashboard">
+ <div class="sectionhead"><h2>📊 দোকানের Dashboard</h2><span class="muted">লাইভ হিসাব</span></div>
+ <div class="dashboard-grid">
+  <div class="dashboard-card"><small>মোট অর্ডার</small><strong id="dashOrders">0</strong><span>সব অর্ডার</span></div>
+  <div class="dashboard-card"><small>নতুন / Pending</small><strong id="dashPending">0</strong><span>অ্যাকশন প্রয়োজন</span></div>
+  <div class="dashboard-card"><small>Delivered</small><strong id="dashDelivered">0</strong><span>সম্পন্ন অর্ডার</span></div>
+  <div class="dashboard-card"><small>মোট পণ্য</small><strong id="dashProducts">0</strong><span>ক্যাটালগে আছে</span></div>
+  <div class="dashboard-card sales"><small>সম্পন্ন বিক্রি</small><strong id="dashSales">৳0</strong><span>শুধু Delivered অর্ডার</span></div>
+  <div class="dashboard-card"><small>অর্ডার করা কাস্টমার</small><strong id="dashCustomers">0</strong><span>Unique customer</span></div>
+ </div>
+ <div class="dashboard-panel"><b>গত ৭ দিনের Delivered বিক্রি</b><div id="dashSalesChart" class="sales-chart"></div></div>
+ <div class="dashboard-panel"><b>সাম্প্রতিক ৫টি অর্ডার</b><div id="dashRecentOrders"></div></div>
+</div>
 <div class="sectionhead"><h2>পণ্য Add / Edit</h2></div>
 <input id="editId" type="hidden">
 <div class="formgrid">
@@ -267,14 +297,14 @@ function renderProducts(){
  $("productGrid").innerHTML=list.length?list.map(([id,p])=>'<article class="product" data-product-id="'+safe(id)+'" role="button" tabindex="0">'+(p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" onerror="this.style.display=\'none\'">':'<div style="height:145px;display:grid;place-items:center;font-size:42px">📱</div>')+'<div class="info"><h3>'+safe(p.brand)+" "+safe(p.name)+'</h3><div class="muted">'+safe(p.ram)+' / '+safe(p.storage)+'</div><div class="price">'+(p.offer?'<s class="muted">৳'+safe(p.price)+'</s> ৳'+safe(p.offer):'৳'+safe(p.price))+'</div><div class="stock '+(p.stock==="Out of Stock"?"out":"")+'">'+safe(p.stock||"Available")+'</div>'+(p.description?'<p class="muted">'+safe(p.description)+'</p>':'')+'</div><button data-add-cart="'+safe(id)+'" style="width:calc(100% - 22px);margin:0 11px 12px">Add to Cart</button></article>').join(""):'<div class="empty" style="grid-column:1/-1">এখনো কোনো ফোন যোগ করা হয়নি।</div>';
 }
 window.setBrand=b=>{activeBrand=b;renderProducts()};
-onValue(ref(db,"products"),snap=>{products=snap.val()||{};renderProducts();renderAdminList();renderCart()});
+onValue(ref(db,"products"),snap=>{products=snap.val()||{};renderProducts();renderAdminList();renderCart();renderAdminDashboard()});
 onValue(ref(db,"siteSettings"),snap=>{settings=snap.val()||{};applySettings();});
 function applySettings(){document.title=settings.title||"SF-Gallery";$("appTitle").textContent=settings.title||"SF-Gallery";$("logoText").textContent=settings.logo||"SF";$("heroTitle").textContent=settings.heroTitle||"SF-Gallery";$("heroText").textContent=settings.heroText||"আপনার পছন্দের স্মার্টফোন খুঁজে নিন।";document.documentElement.style.setProperty("--primary",settings.color||"#1769d2");if($("settingTitle")){$("settingTitle").value=settings.title||"SF-Gallery";$("settingLogo").value=settings.logo||"SF";$("settingHeroTitle").value=settings.heroTitle||"SF-Gallery";$("settingHeroText").value=settings.heroText||"আপনার পছন্দের স্মার্টফোন খুঁজে নিন।";$("settingColor").value=settings.color||"#1769d2";$("deliveryInsideFee").value=settings.deliveryInsideFee??80;$("deliveryOutsideFee").value=settings.deliveryOutsideFee??150;$("bkashNumber").value=settings.bkashNumber||"";$("nagadNumber").value=settings.nagadNumber||"";$("rocketNumber").value=settings.rocketNumber||"";$("upayNumber").value=settings.upayNumber||"";}}
 onAuthStateChanged(auth,user=>{
  isAdmin=!!user&&user.uid===ADMIN_UID;
  customerUser=user&&!isAdmin?user:null;
  if($("accountButton"))$("accountButton").textContent=customerUser?"My Account":"Login";updateBottomNav();
- if(customerUser){$("customerWelcome").textContent="স্বাগতম, "+(user.displayName||"Customer");$("customerEmailView").textContent=user.email||"";onValue(ref(db,"customers/"+user.uid),s=>{const profile=s.val()||{};if(profile.name)$("customerWelcome").textContent="স্বাগতম, "+profile.name;});onValue(ref(db,"orders/"+user.uid),s=>{customerOrders=s.val()||{};renderCustomerOrders();});}else{customerOrders={};renderCustomerOrders();}if(isAdmin){onValue(ref(db,"orders"),s=>{allOrders=s.val()||{};renderAdminOrders();});}
+ if(customerUser){$("customerWelcome").textContent="স্বাগতম, "+(user.displayName||"Customer");$("customerEmailView").textContent=user.email||"";onValue(ref(db,"customers/"+user.uid),s=>{const profile=s.val()||{};if(profile.name)$("customerWelcome").textContent="স্বাগতম, "+profile.name;});onValue(ref(db,"orders/"+user.uid),s=>{customerOrders=s.val()||{};renderCustomerOrders();});}else{customerOrders={};renderCustomerOrders();}if(isAdmin){onValue(ref(db,"orders"),s=>{allOrders=s.val()||{};renderAdminOrders();renderAdminDashboard();});}
  if(!isAdmin&&!isAdminRoute)showPage(customerUser?"home":"auth");$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
 window.togglePasswordVisibility=(id,button)=>{const field=$(id);if(!field)return;const showing=field.type==="password";field.type=showing?"text":"password";button.textContent=showing?"🙈 Password লুকান":"👁️ Password দেখুন";};
 window.setAuthMode=mode=>{
@@ -427,6 +457,27 @@ function renderAdminOrders(){
  const rows=[];Object.entries(allOrders||{}).forEach(([uid,orders])=>Object.entries(orders||{}).forEach(([oid,o])=>rows.push({uid,oid,o})));
  rows.sort((a,b)=>(b.o.createdAt||0)-(a.o.createdAt||0));
  el.innerHTML=rows.length?rows.map(({uid,oid,o})=>'<div class="adminitem" style="display:block"><b>'+safe(o.productName)+'</b><small>Order: '+safe(o.orderNumber||("SFG-"+oid.slice(-7).toUpperCase()))+'<br>Customer: '+safe(o.customerName)+' · '+safe(o.phone)+'<br>Address: '+safe(o.address)+'<br>Products: '+safe(o.items?o.items.map(i=>i.productName+" × "+i.qty).join(", "):o.productName)+'<br>Subtotal: ৳'+safe(o.price)+' · Delivery: ৳'+safe(o.deliveryCharge||0)+' · Total: ৳'+safe(o.totalPrice||o.price)+'<br>Payment: '+safe(o.paymentMethod||"Cash on Delivery")+' · '+safe(o.paymentStatus||"Pay on Delivery")+' · Txn ID: '+safe(o.transactionId||"—")+'<br>Delivery Area: '+safe(o.deliveryArea||"—")+' · '+new Date(o.createdAt||0).toLocaleString("bn-BD")+'<br>Note: '+safe(o.note||"—")+'</small><div class="actions"><select id="paystatus_'+safe(oid)+'"><option value="Verification Pending" '+(o.paymentStatus==="Verification Pending"?"selected":"")+' >Payment Pending</option><option value="Paid" '+(o.paymentStatus==="Paid"?"selected":"")+' >Paid / Verified</option><option value="Payment Failed" '+(o.paymentStatus==="Payment Failed"?"selected":"")+' >Payment Failed</option><option value="Pay on Delivery" '+(o.paymentStatus==="Pay on Delivery"?"selected":"")+' >Pay on Delivery</option></select><button class="secondary" onclick="changePaymentStatus(\''+uid+'\',\''+oid+'\')">Update Payment</button><select id="status_'+safe(oid)+'"><option value="Pending" '+(o.status==="Pending"?"selected":"")+'>Pending</option><option value="Confirmed" '+(o.status==="Confirmed"?"selected":"")+'>Confirmed</option><option value="Processing" '+(o.status==="Processing"?"selected":"")+'>Processing</option><option value="Shipped" '+(o.status==="Shipped"?"selected":"")+'>Shipped</option><option value="Delivered" '+(o.status==="Delivered"?"selected":"")+'>Delivered</option><option value="Cancelled" '+(o.status==="Cancelled"?"selected":"")+'>Cancelled</option></select><button onclick="changeOrderStatus(\''+uid+'\',\''+oid+'\')">Update Status</button></div></div>').join(""):'<p class="muted">এখনো কোনো Customer Order নেই।</p>';
+}
+function renderAdminDashboard(){
+ if(!isAdmin)return;
+ const rows=[];
+ Object.entries(allOrders||{}).forEach(([uid,orders])=>Object.entries(orders||{}).forEach(([oid,o])=>rows.push({uid,oid,o})));
+ rows.sort((a,b)=>(b.o.createdAt||0)-(a.o.createdAt||0));
+ const count=(status)=>rows.filter(x=>(x.o.status||"Pending")===status).length;
+ const delivered=rows.filter(x=>(x.o.status||"Pending")==="Delivered");
+ const sales=delivered.reduce((sum,x)=>sum+Number(x.o.totalPrice??x.o.price??0),0);
+ const buyers=new Set(rows.map(x=>x.uid));
+ $("dashOrders").textContent=rows.length.toLocaleString("bn-BD");
+ $("dashPending").textContent=count("Pending").toLocaleString("bn-BD");
+ $("dashDelivered").textContent=delivered.length.toLocaleString("bn-BD");
+ $("dashProducts").textContent=Object.keys(products||{}).length.toLocaleString("bn-BD");
+ $("dashSales").textContent="৳"+sales.toLocaleString("en-IN");
+ $("dashCustomers").textContent=buyers.size.toLocaleString("bn-BD");
+ const days=[];
+ for(let i=6;i>=0;i--){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-i);const start=d.getTime(),end=start+86400000;const amount=delivered.filter(x=>(x.o.createdAt||0)>=start&&(x.o.createdAt||0)<end).reduce((sum,x)=>sum+Number(x.o.totalPrice??x.o.price??0),0);days.push({label:d.toLocaleDateString("bn-BD",{day:"numeric",month:"short"}),amount});}
+ const max=Math.max(1,...days.map(d=>d.amount));
+ $("dashSalesChart").innerHTML=days.map(d=>'<div class="sales-day"><div class="sales-bar-wrap"><div class="sales-bar" style="height:'+Math.max(3,Math.round(d.amount/max*88))+'px" title="৳'+d.amount.toLocaleString("en-IN")+'"></div></div><b>৳'+(d.amount?d.amount.toLocaleString("en-IN"):"0")+'</b><span>'+safe(d.label)+'</span></div>').join("");
+ $("dashRecentOrders").innerHTML=rows.length?rows.slice(0,5).map(({oid,o})=>'<div class="dashboard-order"><b>'+safe(o.orderNumber||("SFG-"+oid.slice(-7).toUpperCase()))+'</b> · '+safe(o.customerName||"Customer")+'<br>'+safe(o.productName||"পণ্য")+'<br><span class="muted">৳'+Number(o.totalPrice??o.price??0).toLocaleString("en-IN")+' · '+safe(o.status||"Pending")+' · '+(o.createdAt?new Date(o.createdAt).toLocaleDateString("bn-BD"):"—")+'</span></div>').join(""):'<p class="muted" style="margin-top:9px">এখনো কোনো অর্ডার নেই।</p>';
 }
 window.changePaymentStatus=async(uid,oid)=>{if(!isAdmin)return;const paymentStatus=$("paystatus_"+oid).value;try{await update(ref(db,"orders/"+uid+"/"+oid),{paymentStatus,paymentVerifiedAt:Date.now()});}catch(e){alert("Payment status update হয়নি: "+e.message);}};
 window.changeOrderStatus=async(uid,oid)=>{
