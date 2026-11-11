@@ -42,7 +42,11 @@
 <div><label>Offer Price (৳)</label><input id="pOffer" type="number" min="0" placeholder="অফার না থাকলে ফাঁকা"></div>
 <div><label>Stock</label><select id="pStock"><option value="Available">Available</option><option value="Out of Stock">Out of Stock</option></select></div>
 </div>
-<label>Product Image URL</label><input id="pImage" type="url" placeholder="https://example.com/phone.jpg">
+<label>Product Image URL</label><input id="pImage" type="url" placeholder="Upload করলে URL নিজে বসবে">
+<label>অথবা মোবাইলের Gallery থেকে ছবি Upload</label>
+<input id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp">
+<div class="actions"><button type="button" onclick="uploadProductImage()">Upload Image</button></div>
+<p id="imageUploadMessage" class="muted"></p>
 <label>Description</label><textarea id="pDescription" placeholder="ফোনের বিবরণ"></textarea>
 <div class="actions"><button onclick="saveProduct()">Save Product</button><button class="secondary" onclick="clearProductForm()">Clear Form</button></div>
 <p id="productMessage"></p>
@@ -86,7 +90,23 @@ function applySettings(){document.title=settings.title||"SF-Gallery";$("appTitle
 onAuthStateChanged(auth,user=>{isAdmin=!!user&&user.uid===ADMIN_UID;$("loginBox").classList.toggle("hidden",isAdmin);$("adminTools").classList.toggle("hidden",!isAdmin);if(user&&!isAdmin){signOut(auth);$("loginMessage").textContent="এই Account-এর Admin অনুমতি নেই।";}if(isAdmin){$("adminWelcome").textContent="Admin হিসেবে Login করা হয়েছে: "+user.email;applySettings();renderAdminList();}});
 window.loginAdmin=async()=>{try{await signInWithEmailAndPassword(auth,$("adminEmail").value.trim(),$("adminPassword").value);$("loginMessage").textContent="";}catch(e){$("loginMessage").textContent="Login হয়নি: Email অথবা Password পরীক্ষা করো।";}};
 window.logoutAdmin=async()=>{await signOut(auth);$("adminPassword").value="";};
-window.clearProductForm=()=>{["editId","pName","pRam","pStorage","pPrice","pOffer","pImage","pDescription"].forEach(id=>$(id).value="");$("pBrand").value="Samsung";$("pStock").value="Available";$("productMessage").textContent="";};
+window.clearProductForm=()=>{["editId","pName","pRam","pStorage","pPrice","pOffer","pImage","pDescription"].forEach(id=>$(id).value="");$("pImageFile").value="";$("imageUploadMessage").textContent="";$("pBrand").value="Samsung";$("pStock").value="Available";$("productMessage").textContent="";};
+window.uploadProductImage=async()=>{
+ if(!isAdmin)return alert("আগে Admin Login করো");
+ const file=$("pImageFile").files[0];
+ if(!file){$("imageUploadMessage").textContent="আগে Gallery থেকে একটি ছবি নির্বাচন করো।";return;}
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type)){ $("imageUploadMessage").textContent="শুধু JPG, PNG অথবা WebP ছবি Upload করা যাবে।";return;}
+ if(file.size>5*1024*1024){$("imageUploadMessage").textContent="ছবির সাইজ 5 MB-এর কম হতে হবে।";return;}
+ $("imageUploadMessage").textContent="ছবি Upload হচ্ছে... অপেক্ষা করো।";
+ try{
+  const form=new FormData();form.append("file",file);form.append("upload_preset","sf_gallery_upload");
+  const response=await fetch("https://api.cloudinary.com/v1_1/xcof7njn/image/upload",{method:"POST",body:form});
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error?.message||"Upload failed");
+  $("pImage").value=result.secure_url;
+  $("imageUploadMessage").textContent="ছবি Upload হয়েছে! এখন Save Product চাপো।";
+ }catch(e){$("imageUploadMessage").textContent="Upload হয়নি: "+e.message;}
+};
 window.saveProduct=async()=>{if(!isAdmin)return alert("Admin login required");const name=$("pName").value.trim(),price=Number($("pPrice").value);if(!name||!price||price<0){$("productMessage").textContent="Model Name ও সঠিক Price দাও।";return;}const data={brand:$("pBrand").value,name,ram:$("pRam").value.trim(),storage:$("pStorage").value.trim(),price,offer:Number($("pOffer").value)||0,stock:$("pStock").value,image:$("pImage").value.trim(),description:$("pDescription").value.trim(),updatedAt:Date.now()};try{const id=$("editId").value||push(ref(db,"products")).key;await set(ref(db,"products/"+id),data);$("productMessage").textContent="Product save হয়েছে!";clearProductForm();}catch(e){$("productMessage").textContent="Save হয়নি: "+e.message;}};
 window.editProduct=id=>{const p=products[id];if(!p||!isAdmin)return;$("editId").value=id;$("pBrand").value=p.brand||"Samsung";$("pName").value=p.name||"";$("pRam").value=p.ram||"";$("pStorage").value=p.storage||"";$("pPrice").value=p.price||"";$("pOffer").value=p.offer||"";$("pStock").value=p.stock||"Available";$("pImage").value=p.image||"";$("pDescription").value=p.description||"";window.scrollTo(0,0);};
 window.deleteProduct=async id=>{if(!isAdmin)return;if(confirm("এই Product মুছে ফেলবে?")){try{await remove(ref(db,"products/"+id));$("productMessage").textContent="Product delete হয়েছে।";}catch(e){alert("Delete হয়নি: "+e.message);}}};
