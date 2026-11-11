@@ -98,11 +98,68 @@ body{padding-bottom:0}
 
 
 .admin-route #authPage{display:none!important}.admin-route #adminPage{display:block!important}.admin-route #homePage,.admin-route #cartPage,.admin-route #checkoutPage,.admin-route #accountPage{display:none!important}
+
+/* Refined Daraz-like customer storefront */
+.shop-header{position:sticky;top:0;z-index:20;padding-top:9px;padding-bottom:10px}
+.shop-top{min-height:34px}
+.shop-top .brand{min-width:0}
+.shop-top .logo{width:34px;height:34px;display:grid;place-items:center;padding:0;font-size:15px}
+.shop-top .brand h2{font-size:20px;letter-spacing:.1px}
+.shop-search-row{background:#fff;border-radius:6px;padding:3px;gap:4px;box-shadow:0 1px 4px #8f2d001c}
+.shop-search-row #searchBox{height:40px;background:#fff;color:#333;font-size:14px;padding:0 12px;box-shadow:none}
+.shop-search-row #searchBox:focus{outline:0}
+.shop-search-row #cartButton{height:40px;min-width:48px;padding:0 9px;font-size:13px;border-radius:5px}
+.shop-search-row #accountButton{height:40px;padding:0 10px;font-size:12px;border-radius:5px}
+.shop-shortcuts{gap:8px;padding:9px 1px 12px}
+.shop-shortcuts span{border:1px solid #f0e7e2;color:#555;padding:8px 12px;font-weight:600}
+.shop-home .hero{border-radius:8px;min-height:158px;margin:0 0 11px;box-shadow:0 2px 8px #0000000d}
+.shop-home .hero .tag{font-weight:700;letter-spacing:.8px}
+.shop-home .hero h1{line-height:1.2;margin:9px 0}
+.shop-home .hero-promo{font-weight:700;letter-spacing:.1px}
+.shop-benefits{gap:6px;margin:10px 0 13px}
+.shop-benefits div{border:1px solid #eee;box-shadow:0 1px 4px #00000008;min-height:82px}
+.category-panel,.catalog-panel{border:1px solid #eee;box-shadow:0 1px 5px #00000008;padding:12px;margin:11px 0}
+.category-panel .sectionhead h2,.catalog-panel .sectionhead h2{font-size:17px;font-weight:700}
+.category-panel .filters{gap:8px}
+.category-panel .filters button{font-size:12px;font-weight:700;min-height:34px;padding:7px 14px}
+.catalog-panel .sectionhead{padding-bottom:9px;border-bottom:1px solid #f1f1f1}
+.catalog-panel .products{gap:8px}
+.catalog-panel .product{position:relative;border:1px solid #ededed;background:#fff;min-width:0}
+.catalog-panel .product img{height:158px;padding:9px;object-fit:contain}
+.catalog-panel .product .info{padding:9px 9px 7px}
+.catalog-panel .product h3{font-size:13px;line-height:1.4;min-height:36px;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.catalog-panel .product .muted{font-size:11px}
+.catalog-panel .product .price{font-size:16px;margin:7px 0 5px}
+.catalog-panel .product .stock{font-size:11px}
+.catalog-panel .product [data-add-cart]{font-size:12px;font-weight:700;padding:10px 5px;margin-bottom:9px!important;width:calc(100% - 18px)!important;margin-left:9px!important}
+.shop-bottom-nav{z-index:30;box-shadow:0 -2px 12px #00000012}
+.shop-bottom-nav button{border-radius:0;padding:5px 2px;font-weight:500}
+.shop-bottom-nav button:active{background:#fff5f0}
+.page{max-width:100%;margin:12px auto}
+#productDetailContent{line-height:1.55}
+@media(max-width:380px){
+ .shop-top .brand h2{font-size:17px}
+ .shop-search-row{gap:3px}
+ .shop-search-row #cartButton{min-width:42px;padding:0 6px}
+ .shop-search-row #accountButton{padding:0 7px;font-size:11px}
+ .catalog-panel .product img{height:138px}
+ .catalog-panel .product .info{padding:8px}
+}
+@media(min-width:650px){
+ .shop-header{padding-top:12px;padding-bottom:12px}
+ .shop-top .brand h2{font-size:22px}
+ .shop-search-row #searchBox{height:44px;font-size:15px}
+ .shop-search-row #cartButton,.shop-search-row #accountButton{height:44px}
+ .shop-home .hero{min-height:205px}
+ .catalog-panel .product img{height:205px}
+ .catalog-panel .product h3{font-size:14px}
+}
+
 </style>
 <script>document.documentElement.classList.toggle("admin-route",new URLSearchParams(location.search).get("admin")==="1");</script>
 </head>
 <body>
-<header class="shop-header"><div class="shop-top"><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div></div><div class="shop-search-row"><input id="searchBox" placeholder="🔍 ফোন, ব্র্যান্ড বা মডেল খুঁজুন..." oninput="renderProducts()"><button class="headerbtn cart-head" id="cartButton" onclick="showPage('cart')">🛒 <span id="cartCount">0</span></button><button class="headerbtn account-head" id="accountButton" onclick="showPage('account')">Login</button></div></header>
+<header class="shop-header"><div class="shop-top"><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div></div><div class="shop-search-row"><input id="searchBox" placeholder="ফোন, ব্র্যান্ড বা মডেল খুঁজুন..." aria-label="পণ্য খুঁজুন" oninput="renderProducts()"><button class="headerbtn cart-head" id="cartButton" onclick="showPage('cart')">🛒 <span id="cartCount">0</span></button><button class="headerbtn account-head" id="accountButton" onclick="showPage('account')">Login</button></div></header>
 <main>
 <section class="page" id="authPage"><div class="authwrap">
 <h2>Customer Account</h2><p class="muted">Email ও Password দিয়ে Login অথবা নতুন Account তৈরি করুন।</p>
