@@ -21,7 +21,7 @@
 <label>Password</label><input id="customerPassword" type="password" autocomplete="current-password" placeholder="কমপক্ষে ৬ অক্ষর">
 <div class="actions"><button id="authSubmit" onclick="submitCustomerAuth()">Login</button><button class="secondary" onclick="showPage('home')">Back</button></div><p id="authMessage" class="muted"></p>
 </div></section>
-<section class="page" id="accountPage"><h2>My Account</h2><p id="customerWelcome"></p><p id="customerEmailView" class="muted"></p><div class="actions"><button class="secondary" onclick="showPage('home')">Home</button><button class="danger" onclick="customerLogout()">Logout</button></div></section>
+<section class="page" id="accountPage"><h2>My Account</h2><p id="customerWelcome"></p><p id="customerEmailView" class="muted"></p><h3>আমার অর্ডার</h3><div id="customerOrderList"></div><div class="actions"><button class="secondary" onclick="showPage('home')">Home</button><button class="danger" onclick="customerLogout()">Logout</button></div></section>
 <section id="homePage">
 <div class="hero"><div class="tag">WELCOME TO</div><h1 id="heroTitle">SF-Gallery</h1><p id="heroText">আপনার পছন্দের স্মার্টফোন খুঁজে নিন।</p></div>
 <div class="sectionhead"><h2>স্মার্টফোন কালেকশন</h2><span class="muted" id="productCount">0 Products</span></div>
