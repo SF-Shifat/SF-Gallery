@@ -1,8 +1,8 @@
 
 {
-  "name": "SF-Gallery",
-  "short_name": "SF-Gallery",
-  "description": "Your Digital Experience Starts Here",
+  "name": "Get Shope",
+  "short_name": "Get Shope",
+  "description": "Smartphone shopping made simple",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
