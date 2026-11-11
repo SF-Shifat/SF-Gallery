@@ -50,10 +50,56 @@ footer{background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 10px #0000001
 footer button{color:#f85606;background:transparent}
 #notice{color:#16834a}
 @media(min-width:650px){.products{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.product img{height:190px}.hero{padding:32px 28px}.hero h1{font-size:32px}}
+
+/* Daraz-style storefront layout */
+.shop-header{display:block;padding:10px max(12px,calc((100% - 1100px)/2));background:#f85606}
+.shop-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.shop-top .brand{flex:1}
+.shop-top .admin-head{background:#fff;color:#e94d00}
+.shop-search-row{display:flex;align-items:center;gap:7px}
+.shop-search-row #searchBox{flex:1;min-width:0;width:100%;height:42px;padding:0 13px;border:0;border-radius:5px;background:#fff;font-size:14px}
+.shop-search-row .headerbtn{height:42px;white-space:nowrap;padding:0 11px}
+.shop-search-row .cart-head{background:#fff;color:#e94d00}
+.shop-search-row .account-head{background:#b83c00;color:#fff}
+.shop-home{padding-top:8px}
+.shop-shortcuts{display:flex;gap:16px;overflow:auto;white-space:nowrap;padding:7px 3px 12px;color:#666;font-size:12px}
+.shop-shortcuts span{background:#fff;padding:8px 11px;border-radius:20px;border:1px solid #eee}
+.shop-home .hero{position:relative;overflow:hidden;border-radius:7px;min-height:150px;margin:0 0 10px;padding:22px 18px;background:linear-gradient(110deg,#f85606 0%,#ff9a52 100%)}
+.shop-home .hero:after{content:"📱";position:absolute;right:18px;bottom:12px;font-size:72px;opacity:.22}
+.shop-home .hero h1{font-size:25px;max-width:75%}
+.shop-home .hero p{max-width:75%;font-size:14px}
+.hero-promo{display:inline-block;margin-top:12px;padding:6px 10px;background:#ffffff2b;border:1px solid #ffffff55;border-radius:4px;font-size:11px}
+.shop-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 15px}
+.shop-benefits div{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:#fff;border:1px solid #eee;border-radius:6px;padding:10px 4px;font-size:19px}
+.shop-benefits b{font-size:11px;color:#444}.shop-benefits small{font-size:10px;color:#888}
+.category-panel,.catalog-panel{background:#fff;border-radius:7px;padding:10px;margin:10px 0}
+.category-panel .sectionhead,.catalog-panel .sectionhead{margin:3px 2px 8px}
+.category-panel .filters{margin:0;padding:4px 0 2px}
+.catalog-panel .products{gap:8px}
+.catalog-panel .product{border-radius:5px;box-shadow:0 1px 5px #00000012}
+.catalog-panel .product img{height:145px}
+.catalog-panel .product .info{padding:9px}
+.catalog-panel .product h3{min-height:38px}
+.shop-bottom-nav{display:grid;grid-template-columns:repeat(4,1fr);padding:6px 4px max(6px,env(safe-area-inset-bottom));}
+.shop-bottom-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;color:#777;font-size:11px}
+.shop-bottom-nav button:first-child{color:#f85606;font-weight:bold}
+.shop-bottom-nav span{font-size:20px;margin:0}
+body{padding-bottom:0}
+@media(min-width:650px){
+.shop-header{padding-left:max(18px,calc((100% - 1100px)/2));padding-right:max(18px,calc((100% - 1100px)/2))}
+.shop-top{margin-bottom:10px}
+.shop-search-row #searchBox{max-width:none}
+.shop-home .hero{min-height:190px;padding:32px}
+.shop-home .hero h1{font-size:32px}
+.shop-benefits{gap:12px}
+.catalog-panel .products{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.catalog-panel .product img{height:185px}
+}
+
 </style>
 </head>
 <body>
-<header><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div><button class="headerbtn secondary" id="cartButton" onclick="showPage('cart')">Cart (0)</button><button class="headerbtn secondary" id="accountButton" onclick="showPage('account')">Login</button><button class="headerbtn" onclick="showPage('admin')">Admin</button></header>
+<header class="shop-header"><div class="shop-top"><div class="brand"><div class="logo" id="logoText">SF</div><h2 id="appTitle">SF-Gallery</h2></div><button class="headerbtn admin-head" onclick="showPage('admin')">Admin</button></div><div class="shop-search-row"><input id="searchBox" placeholder="🔍 ফোন, ব্র্যান্ড বা মডেল খুঁজুন..." oninput="renderProducts()"><button class="headerbtn cart-head" id="cartButton" onclick="showPage('cart')">🛒 <span id="cartCount">0</span></button><button class="headerbtn account-head" id="accountButton" onclick="showPage('account')">Login</button></div></header>
 <main>
 <section class="page" id="authPage"><div class="authwrap">
 <h2>Customer Account</h2><p class="muted">Email ও Password দিয়ে Login অথবা নতুন Account তৈরি করুন।</p>
@@ -66,12 +112,12 @@ footer button{color:#f85606;background:transparent}
 <section class="page" id="cartPage"><h2>আমার Cart</h2><div id="cartItems"></div><div id="cartTotals"></div><div class="actions"><button onclick="goToCheckout()">Checkout</button><button class="secondary" onclick="showPage('home')">আরও পণ্য কিনুন</button></div><p id="cartMessage" class="muted"></p></section>
 <section class="page" id="checkoutPage"><h2>Checkout</h2><div id="checkoutItems"></div><label>আপনার নাম</label><input id="checkoutName" placeholder="পুরো নাম"><label>মোবাইল নম্বর</label><input id="checkoutPhone" type="tel" placeholder="01XXXXXXXXX"><label>সম্পূর্ণ ঠিকানা</label><textarea id="checkoutAddress" placeholder="বাড়ি, রাস্তা, এলাকা, জেলা"></textarea><label>ডেলিভারি এলাকা</label><select id="deliveryArea" onchange="updateCheckoutSummary()"><option value="inside">দিনাজপুর জেলার ভিতরে</option><option value="outside">দিনাজপুর জেলার বাইরে</option></select><label>অতিরিক্ত তথ্য</label><textarea id="checkoutNote" placeholder="ঐচ্ছিক"></textarea><div class="payment-choice"><b>পেমেন্ট পদ্ধতি</b><label for="paymentMethod">পছন্দ করুন</label><select id="paymentMethod" onchange="updatePaymentFields()"><option value="COD">Cash on Delivery (COD)</option><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Upay">Upay</option></select><div id="paymentInstructions" class="muted" style="margin-top:9px">পণ্য হাতে পেয়ে টাকা দিন।</div><div id="manualPaymentFields" class="hidden"><label>যে নম্বরে টাকা পাঠাবেন</label><b id="paymentReceiver"></b><label>আপনার Transaction ID</label><input id="paymentTrxId" placeholder="টাকা পাঠানোর পর Transaction ID লিখুন"></div><small class="muted">Card Payment আপাতত বন্ধ। Mobile Wallet পেমেন্ট Transaction ID দিয়ে Admin যাচাই করবেন।</small></div><div id="checkoutTotals"></div><div class="actions"><button onclick="placeCartOrder()">অর্ডার নিশ্চিত করুন</button><button class="secondary" onclick="showPage('cart')">Cart-এ ফিরে যান</button></div><p id="checkoutMessage" class="muted"></p></section>
 <section class="page" id="accountPage"><h2>My Account</h2><p id="customerWelcome"></p><p id="customerEmailView" class="muted"></p><h3>আমার অর্ডার</h3><div id="customerOrderList"></div><div class="actions"><button class="secondary" onclick="showPage('home')">Home</button><button class="danger" onclick="customerLogout()">Logout</button></div></section>
-<section id="homePage">
-<div class="hero"><div class="tag">WELCOME TO</div><h1 id="heroTitle">SF-Gallery</h1><p id="heroText">আপনার পছন্দের স্মার্টফোন খুঁজে নিন।</p></div>
-<div class="sectionhead"><h2>স্মার্টফোন কালেকশন</h2><span class="muted" id="productCount">0 Products</span></div>
-<input id="searchBox" placeholder="ফোনের নাম দিয়ে খুঁজুন..." oninput="renderProducts()">
-<div class="filters" id="brandFilters"></div>
-<div class="products" id="productGrid"></div>
+<section id="homePage" class="shop-home">
+<div class="shop-shortcuts"><span>📱 স্মার্টফোন</span><span>🚚 ডেলিভারি</span><span>💵 ক্যাশ অন ডেলিভারি</span></div>
+<div class="hero"><div class="tag">WELCOME TO SF-GALLERY</div><h1 id="heroTitle">SF-Gallery</h1><p id="heroText">আপনার পছন্দের স্মার্টফোন খুঁজে নিন।</p><div class="hero-promo">সেরা ফোন • দারুণ দাম • সহজ অর্ডার</div></div>
+<div class="shop-benefits"><div>🚚<b>সহজ ডেলিভারি</b><small>সারা বাংলাদেশে</small></div><div>💵<b>Cash on Delivery</b><small>পণ্য পেয়ে পেমেন্ট</small></div><div>📦<b>অর্ডার ট্র্যাকিং</b><small>অর্ডারের আপডেট</small></div></div>
+<div class="category-panel"><div class="sectionhead"><h2>ক্যাটাগরি</h2><span class="muted">ব্র্যান্ড বেছে নিন</span></div><div class="filters" id="brandFilters"></div></div>
+<div class="catalog-panel"><div class="sectionhead"><h2>🔥 জনপ্রিয় স্মার্টফোন</h2><span class="muted" id="productCount">0 Products</span></div><div class="products" id="productGrid"></div></div>
 </section>
 <section class="page" id="adminPage">
 <h2>Admin Panel</h2>
@@ -120,7 +166,7 @@ footer button{color:#f85606;background:transparent}
 </section>
 <section class="page" id="orderPage"><h2>অর্ডার করুন</h2><p id="orderProductName" class="muted"></p><label>আপনার নাম</label><input id="orderName" placeholder="পুরো নাম"><label>মোবাইল নম্বর</label><input id="orderPhone" type="tel" placeholder="01XXXXXXXXX"><label>সম্পূর্ণ ঠিকানা</label><textarea id="orderAddress" placeholder="বাড়ি, রাস্তা, এলাকা, জেলা"></textarea><label>অতিরিক্ত তথ্য</label><textarea id="orderNote" placeholder="ঐচ্ছিক"></textarea><div class="actions"><button onclick="placeOrder()">অর্ডার নিশ্চিত করুন</button><button class="secondary" onclick="showPage(&quot;home&quot;)">ফিরে যান</button></div><p id="orderMessage" class="muted"></p></section><section class="page" id="aboutPage"><h2>About Us</h2><p>SF-Gallery — আপনার স্মার্টফোন কেনাকাটার সহজ ঠিকানা।</p><div class="actions"><button onclick="showPage('home')">Back Home</button></div></section>
 </main>
-<footer><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="showPage('about')"><span>ℹ️</span>About</button><button onclick="showPage('admin')"><span>🔐</span>Admin</button></footer>
+<footer class="shop-bottom-nav"><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="document.getElementById('brandFilters').scrollIntoView({behavior:'smooth',block:'center'})"><span>▦</span>Category</button><button onclick="showPage('cart')"><span>🛒</span>Cart</button><button onclick="showPage('account')"><span>👤</span>Account</button></footer>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
