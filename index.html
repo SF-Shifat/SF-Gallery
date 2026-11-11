@@ -61,6 +61,10 @@
 <p id="settingsMessage"></p>
 </div>
 </section>
+<section class="page" id="detailPage">
+<div class="actions" style="margin-top:0"><button class="secondary" onclick="showPage('home')">← Back to Home</button></div>
+<div id="productDetailContent"></div>
+</section>
 <section class="page" id="aboutPage"><h2>About Us</h2><p>SF-Gallery — আপনার স্মার্টফোন কেনাকাটার সহজ ঠিকানা।</p><div class="actions"><button onclick="showPage('home')">Back Home</button></div></section>
 </main>
 <footer><button onclick="showPage('home')"><span>🏠</span>Home</button><button onclick="showPage('about')"><span>ℹ️</span>About</button><button onclick="showPage('admin')"><span>🔐</span>Admin</button></footer>
@@ -75,13 +79,21 @@ let products={},settings={},activeBrand="All",isAdmin=false;
 const $=id=>document.getElementById(id);
 const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 window.showPage=id=>{document.querySelectorAll("main>section").forEach(s=>s.style.display="none");$(id+"Page").style.display="block";window.scrollTo(0,0);if(id==="admin")$("adminPage").scrollIntoView({block:"start"});};
+window.openProduct=id=>{
+ const p=products[id];if(!p)return;
+ const image=p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" style="width:100%;max-height:340px;object-fit:contain;background:#fff;border-radius:14px">':'<div style="height:220px;display:grid;place-items:center;font-size:76px;background:#f4f7fc;border-radius:14px">📱</div>';
+ $('productDetailContent').innerHTML='<div style="margin:16px 0">'+image+'</div><h2 style="color:#172b4d;margin-bottom:8px">'+safe(p.brand)+' '+safe(p.name)+'</h2><p class="muted" style="font-size:15px;margin:8px 0">RAM: '+safe(p.ram||"উল্লেখ নেই")+' · Storage: '+safe(p.storage||"উল্লেখ নেই")+'</p><div class="price" style="font-size:24px">'+(p.offer?'<s class="muted" style="font-size:15px">৳'+safe(p.price)+'</s> ৳'+safe(p.offer):'৳'+safe(p.price))+'</div><p class="stock '+(p.stock==="Out of Stock"?"out":"")+'" style="font-size:14px">'+safe(p.stock||"Available")+'</p><h3 style="margin:18px 0 8px">বিস্তারিত বিবরণ</h3><p style="line-height:1.7;white-space:pre-wrap">'+safe(p.description||"এই ফোনের অতিরিক্ত বিবরণ এখনো যোগ করা হয়নি।")+'</p><div class="actions"><button class="secondary" onclick="showPage(\'home\')">← Back to Home</button></div>';
+ showPage("detail");
+};
+$("productGrid").addEventListener("click",e=>{const card=e.target.closest("[data-product-id]");if(card)window.openProduct(card.dataset.productId);});
+$("productGrid").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){const card=e.target.closest("[data-product-id]");if(card){e.preventDefault();window.openProduct(card.dataset.productId);}}});
 window.renderProducts=renderProducts;
 function renderProducts(){
  const q=$("searchBox").value.trim().toLowerCase(),brands=["All","Samsung","Xiaomi","Realme","Vivo","OPPO"];
  $("brandFilters").innerHTML=brands.map(b=>'<button class="'+(activeBrand===b?'active':'')+'" onclick="setBrand(\''+b+'\')">'+b+'</button>').join("");
  const list=Object.entries(products).filter(([id,p])=>(activeBrand==="All"||p.brand===activeBrand)&&((p.name||"").toLowerCase().includes(q)||(p.brand||"").toLowerCase().includes(q)));
  $("productCount").textContent=list.length+" Products";
- $("productGrid").innerHTML=list.length?list.map(([id,p])=>'<article class="product">'+(p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" onerror="this.style.display=\'none\'">':'<div style="height:145px;display:grid;place-items:center;font-size:42px">📱</div>')+'<div class="info"><h3>'+safe(p.brand)+" "+safe(p.name)+'</h3><div class="muted">'+safe(p.ram)+' / '+safe(p.storage)+'</div><div class="price">'+(p.offer?'<s class="muted">৳'+safe(p.price)+'</s> ৳'+safe(p.offer):'৳'+safe(p.price))+'</div><div class="stock '+(p.stock==="Out of Stock"?"out":"")+'">'+safe(p.stock||"Available")+'</div>'+(p.description?'<p class="muted">'+safe(p.description)+'</p>':'')+'</div></article>').join(""):'<div class="empty" style="grid-column:1/-1">এখনো কোনো ফোন যোগ করা হয়নি।</div>';
+ $("productGrid").innerHTML=list.length?list.map(([id,p])=>'<article class="product" data-product-id="'+safe(id)+'" role="button" tabindex="0">'+(p.image?'<img src="'+safe(p.image)+'" alt="'+safe(p.name)+'" onerror="this.style.display=\'none\'">':'<div style="height:145px;display:grid;place-items:center;font-size:42px">📱</div>')+'<div class="info"><h3>'+safe(p.brand)+" "+safe(p.name)+'</h3><div class="muted">'+safe(p.ram)+' / '+safe(p.storage)+'</div><div class="price">'+(p.offer?'<s class="muted">৳'+safe(p.price)+'</s> ৳'+safe(p.offer):'৳'+safe(p.price))+'</div><div class="stock '+(p.stock==="Out of Stock"?"out":"")+'">'+safe(p.stock||"Available")+'</div>'+(p.description?'<p class="muted">'+safe(p.description)+'</p>':'')+'</div></article>').join(""):'<div class="empty" style="grid-column:1/-1">এখনো কোনো ফোন যোগ করা হয়নি।</div>';
 }
 window.setBrand=b=>{activeBrand=b;renderProducts()};
 onValue(ref(db,"products"),snap=>{products=snap.val()||{};renderProducts();renderAdminList()});
