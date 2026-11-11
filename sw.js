@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "sf-gallery-v5";
+const CACHE_NAME = "sf-gallery-v6";
 
 const FILES_TO_CACHE = [
   "./",
