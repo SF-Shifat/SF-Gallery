@@ -21,7 +21,7 @@ exports.createCustomerOrder = onCall({ region: REGION }, async (request) => {
   const uid = request.auth.uid;
   const input = request.data || {};
   const customerName = cleanText(input.customerName, 100);
-  const phone = cleanText(input.phone, 20).replace(/[\\s-]/g, "");
+  const phone = cleanText(input.phone, 20).replaceAll(" ", "").replaceAll("-", "");
   const address = cleanText(input.address, 500);
   const note = cleanText(input.note, 500);
   const area = input.deliveryArea;
