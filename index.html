@@ -214,12 +214,12 @@ function renderAdminOrders(){
  const el=$("adminOrderList");if(!el||!isAdmin)return;
  const rows=[];Object.entries(allOrders||{}).forEach(([uid,orders])=>Object.entries(orders||{}).forEach(([oid,o])=>rows.push({uid,oid,o})));
  rows.sort((a,b)=>(b.o.createdAt||0)-(a.o.createdAt||0));
- el.innerHTML=rows.length?rows.map(({uid,oid,o})=>'<div class="adminitem" style="display:block"><b>'+safe(o.productName)+'</b><small>Customer: '+safe(o.customerName)+' · '+safe(o.phone)+'<br>Address: '+safe(o.address)+'<br>Price: ৳'+safe(o.price)+' · '+new Date(o.createdAt||0).toLocaleString("bn-BD")+'<br>Note: '+safe(o.note||"—")+'</small><div class="actions"><select id="status_'+safe(oid)+'"><option value="Pending" '+(o.status==="Pending"?"selected":"")+'>Pending</option><option value="Confirmed" '+(o.status==="Confirmed"?"selected":"")+'>Confirmed</option><option value="Delivered" '+(o.status==="Delivered"?"selected":"")+'>Delivered</option><option value="Cancelled" '+(o.status==="Cancelled"?"selected":"")+'>Cancelled</option></select><button onclick="changeOrderStatus(\''+uid+'\',\''+oid+'\')">Update Status</button></div></div>').join(""):'<p class="muted">এখনো কোনো Customer Order নেই।</p>';
+ el.innerHTML=rows.length?rows.map(({uid,oid,o})=>'<div class="adminitem" style="display:block"><b>'+safe(o.productName)+'</b><small>Order: '+safe(o.orderNumber||("SFG-"+oid.slice(-7).toUpperCase()))+'<br>Customer: '+safe(o.customerName)+' · '+safe(o.phone)+'<br>Address: '+safe(o.address)+'<br>Price: ৳'+safe(o.price)+' · '+new Date(o.createdAt||0).toLocaleString("bn-BD")+'<br>Note: '+safe(o.note||"—")+'</small><div class="actions"><select id="status_'+safe(oid)+'"><option value="Pending" '+(o.status==="Pending"?"selected":"")+'>Pending</option><option value="Confirmed" '+(o.status==="Confirmed"?"selected":"")+'>Confirmed</option><option value="Processing" '+(o.status==="Processing"?"selected":"")+'>Processing</option><option value="Shipped" '+(o.status==="Shipped"?"selected":"")+'>Shipped</option><option value="Delivered" '+(o.status==="Delivered"?"selected":"")+'>Delivered</option><option value="Cancelled" '+(o.status==="Cancelled"?"selected":"")+'>Cancelled</option></select><button onclick="changeOrderStatus(\''+uid+'\',\''+oid+'\')">Update Status</button></div></div>').join(""):'<p class="muted">এখনো কোনো Customer Order নেই।</p>';
 }
 window.changeOrderStatus=async(uid,oid)=>{
  if(!isAdmin)return;
- const status=$("status_"+oid).value;
- try{await update(ref(db,"orders/"+uid+"/"+oid),{status,updatedAt:Date.now()});}
+ const status=$("status_"+oid).value,now=Date.now();
+ try{await update(ref(db,"orders/"+uid+"/"+oid),{status,updatedAt:now,["statusHistory/"+status]:now});}
  catch(e){alert("Status update হয়নি: "+e.message);}
 };
 
