@@ -612,7 +612,7 @@ function applyLanguage(){
  document.documentElement.lang=language;
  document.querySelectorAll("#languageSelect option").forEach(o=>{o.selected=o.value===language;});
  const walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
- let n;while(n=walk.nextNode()){if(!n.parentElement.closest("#languageSelect")){if(!n.__sfOriginal)n.__sfOriginal=n.nodeValue;n.nodeValue=language==="en"?translateValue(n.__sfOriginal):n.__sfOriginal;}}
+ let n;while(n=walk.nextNode()){if(!n.parentElement.closest("#languageSelect")){if(!n.__sfOriginal)n.__sfOriginal=n.nodeValue;const nextText=language==="en"?translateValue(n.__sfOriginal):n.__sfOriginal;if(n.nodeValue!==nextText)n.nodeValue=nextText;}}
  document.querySelectorAll("input[placeholder],textarea[placeholder],input[aria-label],button[aria-label]").forEach(el=>{for(const a of ["placeholder","aria-label"]){if(el.hasAttribute(a)){const key="__sf_"+a;if(!el.dataset[key])el.dataset[key]=el.getAttribute(a);el.setAttribute(a,language==="en"?translateValue(el.dataset[key]):el.dataset[key]);}}});
 }
 window.setSiteLanguage=function(value){language=value==="en"?"en":"bn";localStorage.setItem("sfGalleryLanguage",language);applyLanguage();};
