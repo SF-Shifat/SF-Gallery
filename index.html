@@ -230,6 +230,7 @@ body{padding-bottom:0}
   <div class="dashboard-card"><small>অর্ডার করা কাস্টমার</small><strong id="dashCustomers">0</strong><span>Unique customer</span></div>
  </div>
  <div class="dashboard-panel"><b>গত ৭ দিনের Delivered বিক্রি</b><div id="dashSalesChart" class="sales-chart"></div></div>
+ <div class="dashboard-panel"><div class="sectionhead" style="margin:0 0 10px"><b>📥 Excel বিক্রির রিপোর্ট</b></div><label for="reportMonth">যে মাসের রিপোর্ট চান</label><input id="reportMonth" type="month"><button style="width:100%;margin-top:9px" onclick="downloadMonthlyReport()">Excel রিপোর্ট ডাউনলোড</button><p class="muted" style="margin:7px 0 0">Excel-এ খোলা যাবে এমন CSV ফাইল ডাউনলোড হবে।</p></div>
  <div class="dashboard-panel"><b>📅 এই মাসের হিসাব</b><div class="dashboard-month-grid"><div><small>মাসের Delivered বিক্রি</small><strong id="dashMonthSales">৳0</strong></div><div><small>এই মাসে Delivered অর্ডার</small><strong id="dashMonthOrders">0</strong></div><div><small>এই মাসের Pending অর্ডার</small><strong id="dashMonthPending">0</strong></div></div></div>
  <div class="dashboard-panel"><div class="sectionhead"><b>⏳ Pending অর্ডার</b><span id="dashPendingCount" class="muted">0টি</span></div><div id="dashPendingOrders"></div></div>
  <div class="dashboard-panel"><b>সাম্প্রতিক ৫টি অর্ডার</b><div id="dashRecentOrders"></div></div>
@@ -468,6 +469,34 @@ function renderAdminOrders(){
  rows.sort((a,b)=>(b.o.createdAt||0)-(a.o.createdAt||0));
  el.innerHTML=rows.length?rows.map(({uid,oid,o})=>'<div class="adminitem" style="display:block"><b>'+safe(o.productName)+'</b><small>Order: '+safe(o.orderNumber||("SFG-"+oid.slice(-7).toUpperCase()))+'<br>Customer: '+safe(o.customerName)+' · '+safe(o.phone)+'<br>Address: '+safe(o.address)+'<br>Products: '+safe(o.items?o.items.map(i=>i.productName+" × "+i.qty).join(", "):o.productName)+'<br>Subtotal: ৳'+safe(o.price)+' · Delivery: ৳'+safe(o.deliveryCharge||0)+' · Total: ৳'+safe(o.totalPrice||o.price)+'<br>Payment: '+safe(o.paymentMethod||"Cash on Delivery")+' · '+safe(o.paymentStatus||"Pay on Delivery")+' · Txn ID: '+safe(o.transactionId||"—")+'<br>Delivery Area: '+safe(o.deliveryArea||"—")+' · '+new Date(o.createdAt||0).toLocaleString("bn-BD")+'<br>Note: '+safe(o.note||"—")+'</small><div class="actions"><select id="paystatus_'+safe(oid)+'"><option value="Verification Pending" '+(o.paymentStatus==="Verification Pending"?"selected":"")+' >Payment Pending</option><option value="Paid" '+(o.paymentStatus==="Paid"?"selected":"")+' >Paid / Verified</option><option value="Payment Failed" '+(o.paymentStatus==="Payment Failed"?"selected":"")+' >Payment Failed</option><option value="Pay on Delivery" '+(o.paymentStatus==="Pay on Delivery"?"selected":"")+' >Pay on Delivery</option></select><button class="secondary" onclick="changePaymentStatus(\''+uid+'\',\''+oid+'\')">Update Payment</button><select id="status_'+safe(oid)+'"><option value="Pending" '+(o.status==="Pending"?"selected":"")+'>Pending</option><option value="Confirmed" '+(o.status==="Confirmed"?"selected":"")+'>Confirmed</option><option value="Processing" '+(o.status==="Processing"?"selected":"")+'>Processing</option><option value="Shipped" '+(o.status==="Shipped"?"selected":"")+'>Shipped</option><option value="Delivered" '+(o.status==="Delivered"?"selected":"")+'>Delivered</option><option value="Cancelled" '+(o.status==="Cancelled"?"selected":"")+'>Cancelled</option></select><button onclick="changeOrderStatus(\''+uid+'\',\''+oid+'\')">Update Status</button></div></div>').join(""):'<p class="muted">এখনো কোনো Customer Order নেই।</p>';
 }
+window.downloadMonthlyReport=()=>{
+ if(!isAdmin)return;
+ const month=$("reportMonth")?.value;
+ if(!month)return alert("রিপোর্টের মাস নির্বাচন করুন।");
+ const [year,mon]=month.split("-").map(Number);
+ const start=new Date(year,mon-1,1).getTime(),end=new Date(year,mon,1).getTime();
+ const rows=[];
+ Object.entries(allOrders||{}).forEach(([uid,orders])=>Object.entries(orders||{}).forEach(([oid,o])=>{
+  if((o.createdAt||0)>=start&&(o.createdAt||0)<end)rows.push({uid,oid,o});
+ }));
+ rows.sort((a,b)=>(a.o.createdAt||0)-(b.o.createdAt||0));
+ const headers=["Order Number","Date","Customer Name","Phone","Address","Products","Subtotal","Delivery Charge","Total","Order Status","Payment Method","Payment Status","Transaction ID","Delivery Area","Note"];
+ const cell=v=>'"'+String(v??"").replaceAll('"','""').replace(/[\\r\\n]+/g," ")+'"';
+ const lines=[headers,...rows.map(({oid,o})=>[
+  o.orderNumber||("SFG-"+oid.slice(-7).toUpperCase()),
+  o.createdAt?new Date(o.createdAt).toLocaleString("en-GB"):"",
+  o.customerName,o.phone,o.address,
+  o.items?o.items.map(i=>(i.productName||"")+" x "+(i.qty||1)).join("; "):(o.productName||""),
+  o.price??0,o.deliveryCharge??0,o.totalPrice??o.price??0,o.status||"Pending",
+  o.paymentMethod||"Cash on Delivery",o.paymentStatus||"Pay on Delivery",
+  o.transactionId,o.deliveryArea,o.note
+ ])].map(row=>row.map(cell).join(",")).join("\r\n");
+ const blob=new Blob(["\\uFEFF"+lines],{type:"text/csv;charset=utf-8;"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="SF-Gallery-Sales-"+month+".csv";
+ document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+ alert(month+" মাসের "+rows.length+"টি অর্ডারের রিপোর্ট তৈরি হয়েছে।");
+};
 function renderAdminDashboard(){
  if(!isAdmin)return;
  const rows=[];
