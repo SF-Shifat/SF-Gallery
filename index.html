@@ -273,7 +273,7 @@ window.removeCartItem=id=>{delete cart[id];saveCart();};
 function cartEntries(){return Object.entries(cart).filter(([id,qty])=>products[id]&&qty>0);}
 function renderCart(){
  const entries=cartEntries(),el=$("cartItems");if(!el)return;
- const count=entries.reduce((n,[id,q])=>n+q,0);$("cartButton").textContent="Cart ("+count+")";
+ const count=entries.reduce((n,[id,q])=>n+q,0);$("cartButton").textContent="🛒 Cart ("+count+")";
  el.innerHTML=entries.length?entries.map(([id,q])=>{const p=products[id],price=Number(p.offer||p.price||0);return '<div class="cart-line">'+(p.image?'<img src="'+safe(p.image)+'">':'<div style="width:64px;font-size:32px">📱</div>')+'<div style="flex:1"><b>'+safe(p.brand)+' '+safe(p.name)+'</b><div class="muted">৳'+price.toLocaleString("en-IN")+' × '+q+'</div><div class="qty-controls"><button onclick="changeCartQty(\''+id+'\',-1)">−</button><b>'+q+'</b><button onclick="changeCartQty(\''+id+'\',1)">+</button><button class="danger" onclick="removeCartItem(\''+id+'\')">Remove</button></div></div><b>৳'+(price*q).toLocaleString("en-IN")+'</b></div>';}).join(""):'<div class="empty">আপনার Cart খালি। পছন্দের পণ্য Add to Cart করুন।</div>';
  const subtotal=entries.reduce((n,[id,q])=>n+Number(products[id].offer||products[id].price||0)*q,0);
  $("cartTotals").innerHTML=entries.length?'<div class="summary-row"><span>পণ্যের মোট দাম</span><b>৳'+subtotal.toLocaleString("en-IN")+'</b></div>':'';
